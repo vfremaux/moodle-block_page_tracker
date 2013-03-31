@@ -4,14 +4,11 @@
 
 require_once($CFG->dirroot.'/course/format/page/lib.php');
 
-class block_page_tracker extends block_list {
+class block_page_tracker extends block_base {
 
     function init() {
         $this->title = get_string('blockname', 'block_page_tracker') ;
-    }
-
-    function specialization() {
-        if (!empty($this->config) && !empty($this->config->title)) $this->title = format_string($this->config->title) ;
+        $this->version = 2008090909;
     }
     
     function instance_allow_config(){
@@ -38,48 +35,47 @@ class block_page_tracker extends block_list {
     }
 
     function generate_summary() {
-        global $CFG, $USER, $COURSE, $DB, $OUTPUT;
+        global $CFG, $USER, $COURSE;
 
 		if (!$courseid = $COURSE->id){
 	        $courseid = $this->instance->pageid;
 	    }
 	    
-	    if (!isset($this->config->startpage)) @$this->config->startpage = 0;
+	    if (!isset($this->config->startpage)) $this->config->startpage = 0;
 	    
-        $toppage = course_page::get_default_page($courseid);
-        // $pages = page_filter_child_pages($toppage->id, course_page::get_all_pages($courseid, 'flat'));
+        $toppage = page_get_default_page($courseid);
+        // $pages = page_filter_child_pages($toppage->id, page_get_all_pages($courseid, 'flat'));
         if ($this->config->startpage){
-        	$startpage = course_page::get($this->config->startpage, $COURSE->id);
-	        $pages = $startpage->get_children();
+	        $pages = page_get_children($this->config->startpage, 'flat', $courseid);
 	    } else {
-	    	$pages = course_page::get_master_pages($courseid);
+	    	$pages = page_get_master_pages($courseid, 0, DISP_PUBLISH);
 	    }
-
-        $current = course_page::get_current_page($courseid);
+        $stations = '<table class="pagetracker" width="100%">';
+        
+        $current = page_get_current_page($courseid);
         
         if (empty($pages)){
         	return '';
         }
-        
-        $this->content->items = array();
-        $this->content->icons = array();
 
         // todo: if in my learning paths check completion for tick display 
 
         foreach ($pages as $page) {
         	$class = ($current->id == $page->id) ? 'current' : '' ;
-            $hasbeenaccessed = $DB->count_records_select('log', "userid = ? AND course = ? AND action = 'viewpage' AND info = ? ", array($USER->id, $courseid, "{$courseid}:{$page->id}"));
-            $tickimage = ($hasbeenaccessed) ? $OUTPUT->pix_url('tick_green_big', 'block_page_tracker') : $OUTPUT->pix_url('spacer') ;
+            $hasbeenaccessed = count_records_select('log', "userid = {$USER->id} AND course = $courseid AND action = 'viewpage' AND info = '{$courseid}:{$page->id}'");
+            $tickimage = ($hasbeenaccessed) ? $CFG->pixpath.'/blocks/page_tracker/tick_green_big.gif' : $CFG->pixpath.'/spacer.gif' ;
             if (@$this->config->allowlinks == 2 || (@$this->config->allowlinks == 1 && $hasbeenaccessed)){
-	            $this->content->items[] = '<a href="/course/view.php?id='.$courseid.'&amp;page='.$page->id.'" class="block-pagetracker '.$class.'">'.format_string($page->get_name()).'</a>';
-	            $this->content->icons[] = '<img border="0" align="left" src="'.$tickimage.'" width="15" />';
+	            $stations .= '<tr valign="middle"><td align="left"><a href="/course/view.php?id='.$courseid.'&amp;page='.$page->id.'" class="block-pagetracker '.$class.'">'.format_string($page->nametwo).'</a></td><td align="right"><img border="0" align="left" src="'.$tickimage.'" width="15" /></td></tr>';
 	        } else {
-	            $this->content->items[] = '<span class="block-pagetracker '.$class.'">'.format_string($page->get_name()).'</span>';
-	            $this->content->icons[] = '<img border="0" align="left" src="'.$tickimage.'" width="15" />';
+	            $stations .= '<tr valign="middle"><td align="left"><span class="block-pagetracker '.$class.'">'.format_string($page->nametwo).'</span></td><td align="right"><img border="0" align="left" src="'.$tickimage.'" width="15" /></td></tr>';
 	        }
         }
 
-        return $this->content;
+		$stations .= '</table>';
+
+        $html = $stations;
+
+        return $html;
     }
 }
 ?>
