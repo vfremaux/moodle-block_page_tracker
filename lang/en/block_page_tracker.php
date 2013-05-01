@@ -9,12 +9,13 @@
 
 $string['page_tracker:addinstance'] = 'Can add an instance';
 
-$string['pluginname'] = 'Learning Stations';
-$string['blockname'] = 'Learning Stations';
-$string['displayerror'] = 'An error occured in displaying this module.';
+$string['alllevels'] = 'All levels';
 $string['allowlinks'] = 'Allow links generation';
-$string['yesonvisited'] = 'Only on visited pages';
-$string['startpage'] = 'Start page';
-$string['root'] = 'Course root';
+$string['blockname'] = 'Learning Stations';
 $string['configtitle'] = 'Block title (leave blank for standard title).';
-
+$string['depth'] = 'Depth';
+$string['displayerror'] = 'An error occured in displaying this module.';
+$string['pluginname'] = 'Learning Stations';
+$string['root'] = 'Course root';
+$string['startpage'] = 'Start page';
+$string['yesonvisited'] = 'Only on visited pages';
