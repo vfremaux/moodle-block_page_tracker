@@ -48,6 +48,13 @@ class block_page_tracker_edit_form extends block_edit_form {
     		$pageoptions[$p->id] = format_string($p->nametwo);
     	}
 		$mform->addElement('select', 'config_startpage', get_string('startpage', 'block_page_tracker'), $pageoptions);
+
+    	$leveloptions = array();
+    	$leveloptions['100'] = get_string('alllevels', 'block_page_tracker');
+    	for($i = 1; $i <= 3; $i++){
+    		$leveloptions[$i] = $i;
+    	}
+		$mform->addElement('select', 'config_depth', get_string('depth', 'block_page_tracker'), $leveloptions);
 		
     }
 

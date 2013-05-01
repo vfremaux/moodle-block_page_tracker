@@ -9,12 +9,14 @@
 
 $string['page_tracker:addinstance'] = 'Peut ajouter une instance';
 
-$string['pluginname'] = 'Etapes de formation';
-$string['blockname'] = 'Etapes de formation';
-$string['displayerror'] = 'Une erreur est intervenue lors de la construction du contenu.';
+$string['alllevels'] = 'Tous les niveaux';
 $string['allowlinks'] = 'Génère des liens';
-$string['yesonvisited'] = 'Uniquement sur les pages déjà vues';
-$string['startpage'] = 'Page de départ';
-$string['root'] = 'Racine du cours';
+$string['blockname'] = 'Etapes de formation';
 $string['configtitle'] = 'Titre du bloc (laisser vide pour le titre standard).';
+$string['depth'] = 'Profondeur';
+$string['displayerror'] = 'Une erreur est intervenue lors de la construction du contenu.';
+$string['pluginname'] = 'Etapes de formation';
+$string['root'] = 'Racine du cours';
+$string['startpage'] = 'Page de départ';
+$string['yesonvisited'] = 'Uniquement sur les pages déjà vues';
 
