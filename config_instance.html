@@ -1,9 +1,9 @@
-<?php // $Id: config_instance.html,v 1.5 2012-09-19 18:53:30 vf Exp $
+<?php // $Id: config_instance.html,v 1.3 2013-04-29 15:13:35 vf Exp $
 /**
  * Instance configuration HTML template for this block.
  *
  * @author Valery Fremaux
- * @version $Id: config_instance.html,v 1.5 2012-09-19 18:53:30 vf Exp $
+ * @version $Id: config_instance.html,v 1.3 2013-04-29 15:13:35 vf Exp $
  * @package block_page_tracker
  **/
  
@@ -17,6 +17,10 @@
 
     if (!isset($this->config->startpage)){
     	$this->config->startpage = 0;
+    }
+    
+    if (!isset($this->config->depth)){
+		$this->config->depth = 0;
     }
 
 ?>
@@ -46,6 +50,20 @@
             		$options[$p->id] = filter_string($p->nametwo);
             	}
             	choose_from_menu($options, 'startpage', $this->config->startpage); 
+            ?></td>
+        </tr>
+    </table>
+    <table cellpadding="5px" align="center">
+        <tr>
+            <td align="right" style="font-weight: bold;"><?php print_string('depth', 'block_page_tracker') ?>:&nbsp;</td>
+            <td align="left">
+            	<?php 
+            	$leveloptions = array();
+            	$leveloptions['100'] = get_string('alllevels', 'block_page_tracker');
+            	for($i = 1; $i <= 3; $i++){
+            		$leveloptions[$i] = $i;
+            	}
+            	choose_from_menu($leveloptions, 'depth', $this->config->depth); 
             ?></td>
         </tr>
     </table>
