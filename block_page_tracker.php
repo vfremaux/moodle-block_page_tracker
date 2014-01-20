@@ -71,6 +71,7 @@ class block_page_tracker extends block_list {
 		$ticks = new StdClass;
 		$ticks->image = $OUTPUT->pix_url('tick_green_big', 'block_page_tracker');
 		$ticks->imagepartial = $OUTPUT->pix_url('tick_green_big_partial', 'block_page_tracker');
+		$ticks->imageempty = $OUTPUT->pix_url('tick_green_big_empty', 'block_page_tracker');
         
         $this->content->items = array();
         $this->content->icons = array();
@@ -97,15 +98,30 @@ class block_page_tracker extends block_list {
             		$image = $ticks->imagepartial;
             	}
             } else {
-            	$image = $OUPTUT->pix_url('spacer');
+            	$image = $ticks->imageempty;
+            }
+            
+            if (!empty($this->config->usemenulabels)){
+            	$pagename = $page->nametwo;
+            	if (empty($pagename)){
+            		$pagename = $page->nameone;
+            	}
+            } else {
+            	$pagename = $page->nameone;
             }
 
             if ((@$this->config->allowlinks == 2 || (@$this->config->allowlinks == 1 && $page->accessed)) && $isenabled){
-	            $this->content->items[] = '<div class="block-pagetracker '.$class.' pagedepth'.@$page->get_page_depth().'"><a href="/course/view.php?id='.$courseid.'&amp;page='.$page->id.'" class="block-pagetracker '.$class.'">'.format_string($page->get_name()).'</a></div>';
-	            $this->content->icons[] = '<img border="0" align="left" src="'.$image.'" width="15" />';
+	            $this->content->items[] = '<div class="block-pagetracker '.$class.' pagedepth'.@$page->get_page_depth().'"><a href="/course/view.php?id='.$courseid.'&amp;page='.$page->id.'" class="block-pagetracker '.$class.'">'.$pagename.'</a></div>';
+	            if (empty($this->config->hideaccessbullets)){
+		            $this->content->icons[] = '<img border="0" align="left" src="'.$image.'" width="15" />';
+		        }
 	        } else {
-	            $this->content->items[] = '<div class="block-pagetracker '.$class.' pagedepth'.@$page->get_page_depth().'">'.format_string($page->get_name()).'</div>';
-	            $this->content->icons[] = '<img border="0" align="left" src="'.$image.'" width="15" />';
+	        	if (empty($this->config->hidedisabledlinks)){
+		            $this->content->items[] = '<div class="block-pagetracker '.$class.' pagedepth'.@$page->get_page_depth().'">'.$pagename.'</div>';
+		            if (empty($this->config->hideaccessbullets)){
+				    	$this->content->icons[] = '<img border="0" align="left" src="'.$image.'" width="15" />';
+					}
+		        }
 	        }
 	        
 	        if ($page->has_children() && ($this->config->depth - 1 > 0)){
@@ -151,15 +167,30 @@ class block_page_tracker extends block_list {
             		$image = $ticks->imagepartial;
             	}
             } else {
-            	$image = $OUTPUT->pix_url('spacer');
+            	$image = $ticks->imageempty;
+            }
+
+            if (!empty($this->config->usemenulabels)){
+            	$childname = $child->nametwo;
+            	if (empty($childname)){
+            		$childname = $child->nameone;
+            	}
+            } else {
+            	$childname = $child->nameone;
             }
 
             if ((@$this->config->allowlinks == 2 || (@$this->config->allowlinks == 1 && $child->accessed)) && $isenabled){
-	            $this->content->items[] = '<div class="block-pagetracker '.$class.' pagedepth'.@$child->get_page_depth().'"><a href="/course/view.php?id='.$COURSE->id.'&amp;page='.$child->id.'" class="block-pagetracker '.$class.'">'.format_string($child->get_name()).'</a></div>';
-	            $this->content->icons[] = '<img border="0" align="left" src="'.$image.'" width="15" />';
+	            $this->content->items[] = '<div class="block-pagetracker '.$class.' pagedepth'.@$child->get_page_depth().'"><a href="/course/view.php?id='.$COURSE->id.'&amp;page='.$child->id.'" class="block-pagetracker '.$class.'">'.$childname.'</a></div>';
+	            if (empty($this->config->hideaccessbullets)){
+		            $this->content->icons[] = '<img border="0" align="left" src="'.$image.'" width="15" />';
+		        }
 	        } else {
-	            $this->content->items[] = '<div class="block-pagetracker '.$class.' pagedepth'.@$child->get_page_depth().'">'.format_string($child->get_name()).'</div>';
-	            $this->content->icons[] = '<img border="0" align="left" src="'.$image.'" width="15" />';
+	        	if (empty($this->config->hidedisabledlinks)){
+		            $this->content->items[] = '<div class="block-pagetracker '.$class.' pagedepth'.@$child->get_page_depth().'">'.$childname.'</div>';
+	            	if (empty($this->config->hideaccessbullets)){
+		            	$this->content->icons[] = '<img border="0" align="left" src="'.$image.'" width="15" />';
+		            }
+		        }
 	        }
 	        
 	        if ($child->has_children() && ($currentdepth > 0)){
@@ -168,4 +199,4 @@ class block_page_tracker extends block_list {
     	}
     }
 }
-?>
+
