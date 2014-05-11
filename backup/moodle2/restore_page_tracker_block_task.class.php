@@ -70,7 +70,7 @@ class restore_page_tracker_block_task extends restore_block_task {
         $config = unserialize(base64_decode($configdata));
         // Set array of used rss feeds
         // TODO check this, not sure course modules are stored in backup mapping tables as this
-        if ($config->startpage){
+        if ($config && $config->startpage){
 	        $config->startpage = $this->get_mappingid('format_page', $config->startpage);
 	        // Serialize back the configdata
 	        $configdata = base64_encode(serialize($config));
@@ -101,3 +101,36 @@ class restore_page_tracker_block_task extends restore_block_task {
 
 }
 
+/**
+ * Specialised restore_decode_content provider that unserializes the configdata
+ * field, and adds a instance contextualized field for restore integrity
+ */
+class restore_page_tracker_block_decode_content extends restore_decode_content {
+
+    protected $configdata; // Temp storage for unserialized configdata
+
+    protected function get_iterator() {
+        global $DB;
+
+        // Build the SQL dynamically here
+        $fieldslist = 't.' . implode(', t.', $this->fields);
+        $sql = "SELECT t.id, $fieldslist
+                  FROM {" . $this->tablename . "} t
+                  JOIN {backup_ids_temp} b ON b.newitemid = t.id
+                 WHERE b.backupid = ?
+                   AND b.itemname = ?
+                   AND t.blockname = 'page_tracker'";
+        $params = array($this->restoreid, $this->mapping);
+        return ($DB->get_recordset_sql($sql, $params));
+    }
+
+    protected function preprocess_field($field) {
+        $this->configdata = unserialize(base64_decode($field));
+        return isset($this->configdata->text) ? $this->configdata->text : '';
+    }
+
+    protected function postprocess_field($field) {
+        $this->configdata->text = $field;
+        return base64_encode(serialize($this->configdata));
+    }
+}

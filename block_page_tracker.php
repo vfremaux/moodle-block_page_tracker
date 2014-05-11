@@ -23,7 +23,7 @@ class block_page_tracker extends block_list {
     }
 
     function applicable_formats() {
-        return array('all' => false, 'course-view-page' => true);
+        return array('all' => false, 'course' => true, 'mod-*' => true);
     }
 
     function get_content() {
@@ -89,7 +89,10 @@ class block_page_tracker extends block_list {
         }
 
         foreach ($pages as $page) {
-        	$class = ($current->id == $page->id) ? 'current' : '' ;
+        	if (!$page->is_visible(true)) continue;
+        	$realvisible = $page->is_visible(false);
+    		$class = ($realvisible) ? '' : 'shadow ';
+        	$class .= ($current->id == $page->id) ? 'current' : '' ;
             $isenabled = $page->check_activity_lock();
             if ($page->accessed){
             	if ($page->complete){
@@ -102,12 +105,12 @@ class block_page_tracker extends block_list {
             }
             
             if (!empty($this->config->usemenulabels)){
-            	$pagename = $page->nametwo;
+            	$pagename = format_string($page->nametwo);
             	if (empty($pagename)){
-            		$pagename = $page->nameone;
+            		$pagename = format_string($page->nameone);
             	}
             } else {
-            	$pagename = $page->nameone;
+            	$pagename = format_string($page->nameone);
             }
 
             if ((@$this->config->allowlinks == 2 || (@$this->config->allowlinks == 1 && $page->accessed)) && $isenabled){
@@ -158,7 +161,10 @@ class block_page_tracker extends block_list {
     	
     	$children = $page->get_children();
     	foreach($children as &$child){
-        	$class = ($current->id == $child->id) ? 'current' : '' ;
+    		if (!$child->is_visible(true)) continue;
+    		$realvisible = $child->is_visible(false);
+    		$class = ($realvisible) ? '' : 'shadow ';
+        	$class .= ($current->id == $child->id) ? 'current' : '' ;
             $isenabled = $child->check_activity_lock();
             if (@$child->accessed){
             	if ($child->complete){
@@ -171,12 +177,12 @@ class block_page_tracker extends block_list {
             }
 
             if (!empty($this->config->usemenulabels)){
-            	$childname = $child->nametwo;
+            	$childname = format_string($child->nametwo);
             	if (empty($childname)){
-            		$childname = $child->nameone;
+            		$childname = format_string($child->nameone);
             	}
             } else {
-            	$childname = $child->nameone;
+            	$childname = format_string($child->nameone);
             }
 
             if ((@$this->config->allowlinks == 2 || (@$this->config->allowlinks == 1 && $child->accessed)) && $isenabled){
@@ -199,4 +205,3 @@ class block_page_tracker extends block_list {
     	}
     }
 }
-

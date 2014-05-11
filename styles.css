@@ -1,9 +1,9 @@
 .block-pagetracker {
-	line-height:28px;
+	line-height:20px;
 }
 
 .block-pagetracker-current {
-	line-height:24px;
+	line-height:16px;
 }
 
 #page-region-main .pagedepth1,
@@ -34,4 +34,29 @@
 #page-region-post .pagedepth3,
 #region-post .pagedepth3{
 	padding-left:30px;
+}
+
+#page-region-pre .pagedepth1,
+#region-pre .pagedepth1{
+	padding-left:8px;
+}
+
+#page-region-pre .pagedepth2,
+#region-pre .pagedepth2{
+	padding-left:16px;
+}
+
+#page-region-pre .pagedepth3,
+#region-pre .pagedepth3{
+	padding-left:24px;
+}
+
+#page-region-pre .pagedepth4,
+#region-pre .pagedepth4{
+	padding-left:32px;
+}
+
+.block-pagetracker.hidden{
+	opacity:0.5;
+	-moz-opacity:0.5;
 }
