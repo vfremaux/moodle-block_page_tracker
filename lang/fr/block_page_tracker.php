@@ -19,4 +19,9 @@ $string['pluginname'] = 'Etapes de formation';
 $string['root'] = 'Racine du cours';
 $string['startpage'] = 'Page de départ';
 $string['yesonvisited'] = 'Uniquement sur les pages déjà vues';
+$string['hidedisabledlinks'] = 'Cacher complètement les liens désactivés';
+$string['usemenulabels'] = 'Utiliser les labels de menu';
+$string['hideaccessbullets'] = 'Cacher les marques d\'accès';
+
+
 

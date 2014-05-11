@@ -45,4 +45,3 @@ $capabilities = array(
 
 );
 
-?>

@@ -18,7 +18,7 @@
 /**
  * Form for editing HTML block instances.
  *
- * @package   block_livedesk
+ * @package   block_page_tracker
  * @copyright 2012 Valery Fremaux
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -41,9 +41,12 @@ class block_page_tracker_edit_form extends block_edit_form {
     	$linkoptions['2'] = get_string('yes');
 		$mform->addElement('select', 'config_allowlinks', get_string('allowlinks', 'block_page_tracker'), $linkoptions);
 
+		$mform->addElement('checkbox', 'config_hidedisabledlinks', get_string('hidedisabledlinks', 'block_page_tracker'));
+		$mform->setDefault('config_hidedisabledlinks', 0);
+
     	$pageoptions = array();
     	$pageoptions['0'] = get_string('root', 'block_page_tracker');
-    	$pages = course_page::get_all_pages($COURSE->id);
+    	$pages = course_page::get_all_pages($COURSE->id, 'flat');
     	foreach($pages as $p){
     		$pageoptions[$p->id] = format_string($p->nametwo);
     	}
@@ -55,6 +58,12 @@ class block_page_tracker_edit_form extends block_edit_form {
     		$leveloptions[$i] = $i;
     	}
 		$mform->addElement('select', 'config_depth', get_string('depth', 'block_page_tracker'), $leveloptions);
+
+		$mform->addElement('advcheckbox', 'config_usemenulabels', get_string('usemenulabels', 'block_page_tracker'), '');
+		$mform->setDefault('config_usemenulabels', 0);
+
+		$mform->addElement('advcheckbox', 'config_hideaccessbullets', get_string('hideaccessbullets', 'block_page_tracker'), '');
+		$mform->setDefault('config_hideaccessbullets', 0);
 		
     }
 

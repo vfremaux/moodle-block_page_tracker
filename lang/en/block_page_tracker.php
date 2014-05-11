@@ -19,3 +19,6 @@ $string['pluginname'] = 'Learning Stations';
 $string['root'] = 'Course root';
 $string['startpage'] = 'Start page';
 $string['yesonvisited'] = 'Only on visited pages';
+$string['hidedisabledlinks'] = 'Hide disabled links';
+$string['usemenulabels'] = 'Use menu labels';
+$string['hideaccessbullets'] = 'Hide access marks';
