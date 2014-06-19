@@ -27,9 +27,9 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2013040102;        // The current plugin version (Date: YYYYMMDDXX)
-$plugin->requires  = 2013040500;        // Requires this Moodle version
-$plugin->component = 'block_page_tracker'; // Full name of the plugin (used for diagnostics)
-$plugin->release = '2.5.0 (Build 2013031400)';
+$plugin->version   = 2013040102;        // The current plugin version (Date: YYYYMMDDXX).
+$plugin->requires  = 2013111800;        // Requires this Moodle version.
+$plugin->component = 'block_page_tracker'; // Full name of the plugin (used for diagnostics).
+$plugin->release = '2.6.0 (Build 2013031400)';
 $plugin->maturity = MATURITY_RC;
-$plugin->dependencies = array('format_page' => 2013012901);
+$plugin->dependencies = array('format_page' => 2013040102);

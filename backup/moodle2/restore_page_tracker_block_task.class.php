@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -37,11 +36,11 @@ class restore_page_tracker_block_task extends restore_block_task {
     }
 
     public function get_fileareas() {
-        return array(); // No associated fileareas
+        return array(); // No associated fileareas.
     }
 
     public function get_configdata_encoded_attributes() {
-        return array(); // No special handling of configdata
+        return array(); // No special handling of configdata.
     }
 
     static public function define_decode_contents() {
@@ -52,31 +51,33 @@ class restore_page_tracker_block_task extends restore_block_task {
         return array();
     }
     
-	// each block will be responsible for his own remapping in is associated pageid    	    	
+    // Each block will be responsible for his own remapping in is associated pageid.
     public function after_restore(){
-		global $DB;
-		
-    	$courseid = $this->get_courseid();
-    	$blockid = $this->get_blockid();
-    	$oldblockid = $this->get_old_blockid();
+        global $DB;
 
-		// these are fake blocks that can be cached in backup
-		if (!$blockid) return; 
+        $courseid = $this->get_courseid();
+        $blockid = $this->get_blockid();
+        $oldblockid = $this->get_old_blockid();
 
-        // Adjust the serialized configdata->startpage to the actualized format_page id
-        // Get the configdata
+        // These are fake blocks that can be cached in backup.
+        if (!$blockid) {
+            return;
+        }
+
+        // Adjust the serialized configdata->startpage to the actualized format_page id.
+        // Get the configdata.
         $configdata = $DB->get_field('block_instances', 'configdata', array('id' => $blockid));
-        // Extract configdata
+        // Extract configdata.
         $config = unserialize(base64_decode($configdata));
-        // Set array of used rss feeds
-        // TODO check this, not sure course modules are stored in backup mapping tables as this
-        if ($config && $config->startpage){
-	        $config->startpage = $this->get_mappingid('format_page', $config->startpage);
-	        // Serialize back the configdata
-	        $configdata = base64_encode(serialize($config));
-	        // Set the configdata back
-	        $DB->set_field('block_instances', 'configdata', $configdata, array('id' => $blockid));
-	    }
+        // Set array of used rss feeds.
+        // TODO check this, not sure course modules are stored in backup mapping tables as this.
+        if ($config && $config->startpage) {
+            $config->startpage = $this->get_mappingid('format_page', $config->startpage);
+            // Serialize back the configdata
+            $configdata = base64_encode(serialize($config));
+            // Set the configdata back.
+            $DB->set_field('block_instances', 'configdata', $configdata, array('id' => $blockid));
+        }
 
     }
 
@@ -98,7 +99,6 @@ class restore_page_tracker_block_task extends restore_block_task {
     public function get_mapping($itemname, $oldid) {
         return restore_dbops::get_backup_ids_record($this->plan->get_restoreid(), $itemname, $oldid);
     }
-
 }
 
 /**
@@ -107,19 +107,25 @@ class restore_page_tracker_block_task extends restore_block_task {
  */
 class restore_page_tracker_block_decode_content extends restore_decode_content {
 
-    protected $configdata; // Temp storage for unserialized configdata
+    protected $configdata; // Temp storage for unserialized configdata.
 
     protected function get_iterator() {
         global $DB;
 
-        // Build the SQL dynamically here
+        // Build the SQL dynamically here.
         $fieldslist = 't.' . implode(', t.', $this->fields);
-        $sql = "SELECT t.id, $fieldslist
-                  FROM {" . $this->tablename . "} t
-                  JOIN {backup_ids_temp} b ON b.newitemid = t.id
-                 WHERE b.backupid = ?
-                   AND b.itemname = ?
-                   AND t.blockname = 'page_tracker'";
+        $sql = "
+            SELECT 
+                t.id, $fieldslist
+            FROM 
+                {" . $this->tablename . "} t
+            JOIN 
+                {backup_ids_temp} b ON b.newitemid = t.id
+            WHERE 
+                b.backupid = ? AND 
+                b.itemname = ? AND 
+                t.blockname = 'page_tracker'
+        ";
         $params = array($this->restoreid, $this->mapping);
         return ($DB->get_recordset_sql($sql, $params));
     }
