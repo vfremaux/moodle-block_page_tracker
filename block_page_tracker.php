@@ -99,13 +99,31 @@ class block_page_tracker extends block_list {
 
         // TODO : if in my learning paths check completion for tick display.
 
+        $logmanger = get_log_manager();
+        $readers = $logmanger->get_readers('\core\log\sql_select_reader');
+        $reader = reset($readers);
+
         // Pre scans page for completion compilation.
-        foreach ($pages as $page) {
-            $page->accessed = $DB->record_exists_select('log', " userid = ? AND course = ? AND action = 'viewpage' AND info = ? ", array($USER->id, $courseid, "{$courseid}:{$page->id}"));
-            if ($page->has_children()) {
-                $page->complete = $page->accessed && $this->check_childs_access($page);
+        foreach (array_keys($pages) as $pid) {
+            $page = $pages[$pid];
+            if ($reader instanceof \logstore_standard\log\store) {
+                $courseparm = 'courseid';
+                if ($DB->record_exists_select('logstore_standard_log', " userid = ? AND $courseparm = ? AND component = 'format_page' AND action = 'viewed' AND objectid = ? ", array($USER->id, $courseid, $pid))) {
+                    $pages[$pid]->accessed = 1;
+                }
+            } elseif ($reader instanceof \logstore_legacy\log\store) {
+                $courseparm = 'course';
+                if ($DB->record_exists_select('log', " userid = ? AND $courseparm = ? AND action = 'viewpage' AND info = ? ", array($USER->id, $courseid, "{$courseid}:{$pid}"))) {
+                    $pages[$pid]->accessed = 1;
+                }
             } else {
-                $page->complete = $page->accessed;
+                $pages[$pid]->accessed = 0;
+            }
+
+            if ($page->has_children()) {
+                $pages[$pid]->complete = ($pages[$pid]->accessed && $this->check_childs_access($pages[$pid]));
+            } else {
+                $pages[$pid]->complete = $page->accessed;
             }
         }
 
@@ -119,14 +137,14 @@ class block_page_tracker extends block_list {
             $isenabled = $page->check_activity_lock();
             if ($page->accessed) {
                 if ($page->complete) {
-                    $image = $ticks->image; 
+                    $image = $ticks->image;
                 } else {
                     $image = $ticks->imagepartial;
                 }
             } else {
                 $image = $ticks->imageempty;
             }
-            
+
             if (!empty($this->config->usemenulabels)) {
                 $pagename = format_string($page->nametwo);
                 if (empty($pagename)) {
@@ -164,10 +182,24 @@ class block_page_tracker extends block_list {
     function check_childs_access(&$page) {
         global $USER, $COURSE, $DB;
 
+        $logmanager = get_log_manager();
+        $readers = $logmanager->get_readers('\core\log\sql_select_reader');
+        $reader = reset($readers);
+
         $complete = true;
         $children = $page->get_children();
         foreach ($children as &$child) {
-            $child->accessed = $DB->record_exists_select('log', " userid = ? AND course = ? AND action = 'viewpage' AND info = ? ", array($USER->id, $COURSE->id, "{$COURSE->id}:{$child->id}"));
+
+            if ($reader instanceof \logstore_standard\log\store) {
+                $courseparm = 'courseid';
+                $child->accessed = $DB->record_exists_select('logstore_standard_log', " userid = ? AND $courseparm = ? AND component = 'format_page' AND action = 'viewed' AND objectid = ? ", array($USER->id, $COURSE->id, $child->id));
+            } elseif ($reader instanceof \logstore_legacy\log\store) {
+                $courseparm = 'course';
+                $child->accessed = $DB->record_exists_select('log', " userid = ? AND $courseparm = ? AND action = 'viewpage' AND info = ? ", array($USER->id, $COURSE->id, "{$COURSE->id}:{$child->id}"));
+            } else {
+                $child->accessed = false;
+            }
+
             if ($child->has_children()) {
                 $child->complete = $child->accessed && $this->check_childs_access($child);
             } else {
@@ -178,7 +210,7 @@ class block_page_tracker extends block_list {
 
         return $complete;
     }
-    
+
     function print_sub_stations(&$page, &$ticks, $current, $currentdepth) {
         global $CFG, $COURSE, $OUTPUT;
 
