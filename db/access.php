@@ -43,5 +43,16 @@ $capabilities = array(
         )
     ),
 
+    'block/page_tracker:accessallpages' => array(
+
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_BLOCK,
+        'legacy' => array(
+            'manager' => CAP_ALLOW,
+            'editingteacher' => CAP_ALLOW,
+            'teacher' => CAP_ALLOW
+        )
+    ),
+
 );
 

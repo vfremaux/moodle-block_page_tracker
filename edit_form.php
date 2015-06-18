@@ -39,6 +39,7 @@ class block_page_tracker_edit_form extends block_edit_form {
         $linkoptions['1'] = get_string('yesonvisited', 'block_page_tracker');
         $linkoptions['2'] = get_string('yes');
         $mform->addElement('select', 'config_allowlinks', get_string('allowlinks', 'block_page_tracker'), $linkoptions);
+        $mform->setDefault('config_allowlinks', 1);
 
         $mform->addElement('checkbox', 'config_hidedisabledlinks', get_string('hidedisabledlinks', 'block_page_tracker'));
         $mform->setDefault('config_hidedisabledlinks', 0);

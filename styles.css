@@ -2,6 +2,20 @@
     line-height:20px;
 }
 
+.block_page_tracker .content .icon {
+    display:table-cell !important;
+}
+
+.block_page_tracker .content .column.c1 {
+    display:table-cell !important;
+    width:95%;
+}
+
+.block_page_tracker li {
+    margin-bottom:6px;
+}
+
+
 .block-pagetracker-current {
     line-height:16px;
 }

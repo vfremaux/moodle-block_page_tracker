@@ -5,9 +5,10 @@
  * @author Valery Fremaux
  * @version $Id: block_page_tracker.php,v 1.4 2012-02-16 19:53:55 vf Exp $
  * @package block_page_tracker
- **/
+ */
 
 $string['page_tracker:addinstance'] = 'Can add an instance';
+$string['page_tracker:accessallpages'] = 'Can access all pages';
 
 $string['alllevels'] = 'All levels';
 $string['allowlinks'] = 'Allow links generation';

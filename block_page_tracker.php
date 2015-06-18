@@ -14,6 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * Form for editing page_tracker block instances.
+ *
+ * @package   block_page_tracker
+ * @copyright 2012 Valery Fremaux
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 
 /*
  * generates a menu list of child pages ("stations") for a paged format course
@@ -37,7 +44,7 @@ class block_page_tracker extends block_list {
         return true;
     }
 
-    function instance_allow_multiple() {
+    public function instance_allow_multiple() {
         return true;
     }
 
@@ -49,7 +56,7 @@ class block_page_tracker extends block_list {
         if ($this->content !== NULL) {
             return $this->content;
         }
-        
+
         if (!isset($this->config->depth)) {
             @$this->config->depth = 100;
         }
@@ -66,6 +73,9 @@ class block_page_tracker extends block_list {
 
     function generate_summary() {
         global $CFG, $USER, $COURSE, $DB, $OUTPUT;
+
+        $context = context_block::instance($this->instance->id);
+        $coursecontext = context_course::instance($COURSE->id);
 
         if (!$courseid = $COURSE->id) {
             $courseid = $this->instance->pageid;
@@ -89,11 +99,11 @@ class block_page_tracker extends block_list {
         }
 
         // Resolve tickimage locations.
-        $ticks = new StdClass;
+        $ticks = new StdClass();
         $ticks->image = $OUTPUT->pix_url('tick_green_big', 'block_page_tracker');
         $ticks->imagepartial = $OUTPUT->pix_url('tick_green_big_partial', 'block_page_tracker');
         $ticks->imageempty = $OUTPUT->pix_url('tick_green_big_empty', 'block_page_tracker');
-        
+
         $this->content->items = array();
         $this->content->icons = array();
 
@@ -128,11 +138,14 @@ class block_page_tracker extends block_list {
         }
 
         foreach ($pages as $page) {
-            if (!$page->is_visible(true)) {
-                continue;
+            if (!$page->is_visible(false)) {
+                if (!has_capability('format/page:editpages', $coursecontext)) {
+                    continue;
+                }
             }
-            $realvisible = $page->is_visible(false);
-            $class = ($realvisible) ? '' : 'shadow ';
+
+            $realvisible = $page->is_visible(true);
+            $class = ($realvisible) ? '' : 'shadow';
             $class .= ($current->id == $page->id) ? 'current' : '';
             $isenabled = $page->check_activity_lock();
             if ($page->accessed) {
@@ -154,7 +167,7 @@ class block_page_tracker extends block_list {
                 $pagename = format_string($page->nameone);
             }
 
-            if ((@$this->config->allowlinks == 2 || (@$this->config->allowlinks == 1 && $page->accessed)) && $isenabled) {
+            if (((@$this->config->allowlinks == 2 || (@$this->config->allowlinks == 1 && $page->accessed)) && $isenabled) || has_capability('block/page_tracker:accessallpages', $context)) {
                 $this->content->items[] = '<div class="block-pagetracker '.$class.' pagedepth'.@$page->get_page_depth().'"><a href="/course/view.php?id='.$courseid.'&amp;page='.$page->id.'" class="block-pagetracker '.$class.'">'.$pagename.'</a></div>';
                 if (empty($this->config->hideaccessbullets)) {
                     $this->content->icons[] = '<img border="0" align="left" src="'.$image.'" width="15" />';
@@ -167,7 +180,7 @@ class block_page_tracker extends block_list {
                     }
                 }
             }
-            
+
             if ($page->has_children() && ($this->config->depth - 1 > 0)) {
                 $this->print_sub_stations($page, $ticks, $current, $this->config->depth - 2);
             }
@@ -214,10 +227,15 @@ class block_page_tracker extends block_list {
     function print_sub_stations(&$page, &$ticks, $current, $currentdepth) {
         global $CFG, $COURSE, $OUTPUT;
 
+        $context = context_block::instance($this->instance->id);
+        $coursecontext = context_course::instance($COURSE->id);
+
         $children = $page->get_children();
-        foreach($children as &$child) {
-            if (!$child->is_visible(true)) {
-                continue;
+        foreach ($children as &$child) {
+            if (!$child->is_visible(false)) {
+                if (!has_capability('format/page:editpages', $coursecontext)) {
+                    continue;
+                }
             }
             $realvisible = $child->is_visible(false);
             $class = ($realvisible) ? '' : 'shadow ';
@@ -242,7 +260,7 @@ class block_page_tracker extends block_list {
                 $childname = format_string($child->nameone);
             }
 
-            if ((@$this->config->allowlinks == 2 || (@$this->config->allowlinks == 1 && $child->accessed)) && $isenabled) {
+            if (((@$this->config->allowlinks == 2 || (@$this->config->allowlinks == 1 && $child->accessed)) && $isenabled) || has_capability('block/page_tracker:accessallpages', $context)) {
                 $this->content->items[] = '<div class="block-pagetracker '.$class.' pagedepth'.@$child->get_page_depth().'"><a href="/course/view.php?id='.$COURSE->id.'&amp;page='.$child->id.'" class="block-pagetracker '.$class.'">'.$childname.'</a></div>';
                 if (empty($this->config->hideaccessbullets)) {
                     $this->content->icons[] = '<img border="0" align="left" src="'.$image.'" width="15" />';

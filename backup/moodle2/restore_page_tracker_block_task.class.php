@@ -36,11 +36,13 @@ class restore_page_tracker_block_task extends restore_block_task {
     }
 
     public function get_fileareas() {
-        return array(); // No associated fileareas.
+        // No associated fileareas.
+        return array();
     }
 
     public function get_configdata_encoded_attributes() {
-        return array(); // No special handling of configdata.
+        // No special handling of configdata.
+        return array();
     }
 
     static public function define_decode_contents() {
@@ -50,9 +52,9 @@ class restore_page_tracker_block_task extends restore_block_task {
     static public function define_decode_rules() {
         return array();
     }
-    
+
     // Each block will be responsible for his own remapping in is associated pageid.
-    public function after_restore(){
+    public function after_restore() {
         global $DB;
 
         $courseid = $this->get_courseid();
@@ -78,7 +80,6 @@ class restore_page_tracker_block_task extends restore_block_task {
             // Set the configdata back.
             $DB->set_field('block_instances', 'configdata', $configdata, array('id' => $blockid));
         }
-
     }
 
     /**
@@ -107,7 +108,8 @@ class restore_page_tracker_block_task extends restore_block_task {
  */
 class restore_page_tracker_block_decode_content extends restore_decode_content {
 
-    protected $configdata; // Temp storage for unserialized configdata.
+    // Temp storage for unserialized configdata.
+    protected $configdata;
 
     protected function get_iterator() {
         global $DB;
