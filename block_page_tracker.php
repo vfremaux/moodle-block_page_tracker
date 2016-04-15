@@ -14,10 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+defined('MOODLE_INTERNAL') || die();
+
 /**
  * Form for editing page_tracker block instances.
  *
  * @package   block_page_tracker
+ * @category  blocks
  * @copyright 2012 Valery Fremaux
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -110,7 +113,7 @@ class block_page_tracker extends block_list {
         // TODO : if in my learning paths check completion for tick display.
 
         $logmanger = get_log_manager();
-        $readers = $logmanger->get_readers('\core\log\sql_select_reader');
+        $readers = $logmanger->get_readers('\core\log\sql_reader');
         $reader = reset($readers);
 
         // Pre scans page for completion compilation.
@@ -196,7 +199,7 @@ class block_page_tracker extends block_list {
         global $USER, $COURSE, $DB;
 
         $logmanager = get_log_manager();
-        $readers = $logmanager->get_readers('\core\log\sql_select_reader');
+        $readers = $logmanager->get_readers('\core\log\sql_reader');
         $reader = reset($readers);
 
         $complete = true;

@@ -35,6 +35,11 @@
     padding-left:60px;
 }
 
+#page-region-main .pagedepth4,
+#region-main .pagedepth4{
+    padding-left:80px;
+}
+
 #page-region-post .pagedepth1,
 #region-post .pagedepth1{
     padding-left:10px;
@@ -48,6 +53,11 @@
 #page-region-post .pagedepth3,
 #region-post .pagedepth3{
     padding-left:30px;
+}
+
+#page-region-post .pagedepth4,
+#region-post .pagedepth4{
+    padding-left:40px;
 }
 
 #page-region-pre .pagedepth1,

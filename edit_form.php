@@ -14,16 +14,17 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+defined('MOODLE_INTERNAL') || die();
+
 /**
  * Form for editing HTML block instances.
  *
  * @package   block_page_tracker
+ * @category  blocks
  * @copyright 2012 Valery Fremaux
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
  
-if (!defined('MOODLE_INTERNAL')) die ('You cannot use this script this way');
-
 class block_page_tracker_edit_form extends block_edit_form {
     protected function specific_definition($mform) {
         global $DB, $CFG, $COURSE;

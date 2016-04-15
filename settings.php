@@ -14,6 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+defined('MOODLE_INTERNAL') || die();
+
+/**
+ * @package   block_page_tracker
+ * @category  blocks
+ * @copyright 2012 Valery Fremaux
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 $settings->add(new admin_setting_configcheckbox('pageindividualisationfeature', get_string('pageindividualisationfeature', 'block_page_module'),
                    get_string('configpageindividualisationfeature', 'block_page_module'), false));
 
