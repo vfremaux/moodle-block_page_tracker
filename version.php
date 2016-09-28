@@ -17,12 +17,11 @@
 /**
  * Version details
  *
- * @package    block
- * @subpackage page_tracker
- * version Moodle 2
- * @copyright  1999 onwards Martin Dougiamas (http://dougiamas.com)
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @author Valery Fremaux (valery.fremaux@gmail.com)
+ * @package     block_page_tracker
+ * @category    blocks
+ * @author      Valery Fremaux <valery.fremaux@gmail.com>
+ * @copyright   2008 onwards Valery Fremaux (http://www.mylearningfactory.com)
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
@@ -32,4 +31,7 @@ $plugin->requires  = 2015111100;        // Requires this Moodle version.
 $plugin->component = 'block_page_tracker'; // Full name of the plugin (used for diagnostics).
 $plugin->release = '3.0.0 (Build 2016040300)';
 $plugin->maturity = MATURITY_STABLE;
-$plugin->dependencies = array('format_page' => 2013012901);
+$plugin->dependencies = array('format_page' => 2016030701);
+
+// Non moodle attributes.
+$plugin->codeincrement = '3.0.0000';

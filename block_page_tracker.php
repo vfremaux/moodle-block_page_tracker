@@ -43,6 +43,10 @@ class block_page_tracker extends block_list {
         }
     }
 
+    public function has_config() {
+        return true;
+    }
+
     public function instance_allow_config() {
         return true;
     }
@@ -112,8 +116,8 @@ class block_page_tracker extends block_list {
 
         // TODO : if in my learning paths check completion for tick display.
 
-        $logmanger = get_log_manager();
-        $readers = $logmanger->get_readers('\core\log\sql_reader');
+        $logmanager = get_log_manager();
+        $readers = $logmanager->get_readers('\core\log\sql_reader');
         $reader = reset($readers);
 
         // Pre scans page for completion compilation.

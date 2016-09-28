@@ -29,6 +29,8 @@ class block_page_tracker_edit_form extends block_edit_form {
     protected function specific_definition($mform) {
         global $DB, $CFG, $COURSE;
 
+        $config = get_config('block_page_tracker');
+
         // Fields for editing HTML block title and contents.
 
         $mform->addElement('header', 'configheader', get_string('blocksettings', 'block'));
@@ -39,11 +41,11 @@ class block_page_tracker_edit_form extends block_edit_form {
         $linkoptions['0'] = get_string('no');
         $linkoptions['1'] = get_string('yesonvisited', 'block_page_tracker');
         $linkoptions['2'] = get_string('yes');
-        $mform->addElement('select', 'config_allowlinks', get_string('allowlinks', 'block_page_tracker'), $linkoptions);
+        $mform->addElement('select', 'config_allowlinks', get_string('allowlinks', 'block_page_tracker'), $linkoptions, @$config->defaultallowlinks);
         $mform->setDefault('config_allowlinks', 1);
 
         $mform->addElement('checkbox', 'config_hidedisabledlinks', get_string('hidedisabledlinks', 'block_page_tracker'));
-        $mform->setDefault('config_hidedisabledlinks', 0);
+        $mform->setDefault('config_hidedisabledlinks', $config->defaulthidedisabledlinks);
 
         $pageoptions = array();
         $pageoptions['0'] = get_string('root', 'block_page_tracker');
@@ -61,10 +63,10 @@ class block_page_tracker_edit_form extends block_edit_form {
         $mform->addElement('select', 'config_depth', get_string('depth', 'block_page_tracker'), $leveloptions);
 
         $mform->addElement('advcheckbox', 'config_usemenulabels', get_string('usemenulabels', 'block_page_tracker'), '');
-        $mform->setDefault('config_usemenulabels', 0);
+        $mform->setDefault('config_usemenulabels', $config->defaultusemenulabels);
 
         $mform->addElement('advcheckbox', 'config_hideaccessbullets', get_string('hideaccessbullets', 'block_page_tracker'), '');
-        $mform->setDefault('config_hideaccessbullets', 0);
+        $mform->setDefault('config_hideaccessbullets', $config->defaulthideaccessbullets);
     }
 
     function set_data($defaults, &$files = null) {
