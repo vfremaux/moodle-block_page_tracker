@@ -14,8 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Form for editing page_tracker block instances.
  *
@@ -24,6 +22,7 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright 2012 Valery Fremaux
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+defined('MOODLE_INTERNAL') || die();
 
 /*
  * generates a menu list of child pages ("stations") for a paged format course
@@ -33,6 +32,8 @@ require_once($CFG->dirroot.'/course/format/page/lib.php');
 
 class block_page_tracker extends block_list {
 
+    protected $tracks;
+
     public function init() {
         $this->title = get_string('blockname', 'block_page_tracker');
     }
@@ -41,6 +42,10 @@ class block_page_tracker extends block_list {
         if (!empty($this->config) && !empty($this->config->title)) {
             $this->title = format_string($this->config->title);
         }
+    }
+
+    public function has_config() {
+        return true;
     }
 
     public function instance_allow_config() {
@@ -56,7 +61,7 @@ class block_page_tracker extends block_list {
     }
 
     function get_content() {
-        if ($this->content !== NULL) {
+        if ($this->content !== null) {
             return $this->content;
         }
 
@@ -89,8 +94,12 @@ class block_page_tracker extends block_list {
         }
 
         if ($this->config->startpage) {
-            $startpage = course_page::get($this->config->startpage, $COURSE->id);
-            $pages = $startpage->get_children();
+            if ($startpage = course_page::get($this->config->startpage, $COURSE->id)) {
+                $pages = $startpage->get_children();
+            } else {
+                $this->content->footer = get_string('errormissingpage', 'block_page_tracker');
+                return $this->content;
+            }
         } else {
             $pages = course_page::get_all_pages($courseid, 'nested');
         }
@@ -112,23 +121,12 @@ class block_page_tracker extends block_list {
 
         // TODO : if in my learning paths check completion for tick display.
 
-        $logmanger = get_log_manager();
-        $readers = $logmanger->get_readers('\core\log\sql_select_reader');
-        $reader = reset($readers);
+        $this->get_tracks();
 
         // Pre scans page for completion compilation.
-        foreach (array_keys($pages) as $pid) {
-            $page = $pages[$pid];
-            if ($reader instanceof \logstore_standard\log\store) {
-                $courseparm = 'courseid';
-                if ($DB->record_exists_select('logstore_standard_log', " userid = ? AND $courseparm = ? AND component = 'format_page' AND action = 'viewed' AND objectid = ? ", array($USER->id, $courseid, $pid))) {
-                    $pages[$pid]->accessed = 1;
-                }
-            } elseif ($reader instanceof \logstore_legacy\log\store) {
-                $courseparm = 'course';
-                if ($DB->record_exists_select('log', " userid = ? AND $courseparm = ? AND action = 'viewpage' AND info = ? ", array($USER->id, $courseid, "{$courseid}:{$pid}"))) {
-                    $pages[$pid]->accessed = 1;
-                }
+        foreach ($pages as $pid => $page) {
+            if (!empty($this->tracks) && in_array($pid, $this->tracks)) {
+                $pages[$pid]->accessed = 1;
             } else {
                 $pages[$pid]->accessed = 0;
             }
@@ -195,25 +193,17 @@ class block_page_tracker extends block_list {
    /**
     * Recursive down scann
     */
-    function check_childs_access(&$page) {
+    public function check_childs_access(&$page) {
         global $USER, $COURSE, $DB;
-
-        $logmanager = get_log_manager();
-        $readers = $logmanager->get_readers('\core\log\sql_select_reader');
-        $reader = reset($readers);
 
         $complete = true;
         $children = $page->get_children();
         foreach ($children as &$child) {
 
-            if ($reader instanceof \logstore_standard\log\store) {
-                $courseparm = 'courseid';
-                $child->accessed = $DB->record_exists_select('logstore_standard_log', " userid = ? AND $courseparm = ? AND component = 'format_page' AND action = 'viewed' AND objectid = ? ", array($USER->id, $COURSE->id, $child->id));
-            } elseif ($reader instanceof \logstore_legacy\log\store) {
-                $courseparm = 'course';
-                $child->accessed = $DB->record_exists_select('log', " userid = ? AND $courseparm = ? AND action = 'viewpage' AND info = ? ", array($USER->id, $COURSE->id, "{$COURSE->id}:{$child->id}"));
+            if (!empty($this->tracks) && in_array($child->id, $this->tracks)) {
+                $child->accessed = 1;
             } else {
-                $child->accessed = false;
+                $child->accessed = 0;
             }
 
             if ($child->has_children()) {
@@ -263,8 +253,11 @@ class block_page_tracker extends block_list {
                 $childname = format_string($child->nameone);
             }
 
-            if (((@$this->config->allowlinks == 2 || (@$this->config->allowlinks == 1 && $child->accessed)) && $isenabled) || has_capability('block/page_tracker:accessallpages', $context)) {
-                $this->content->items[] = '<div class="block-pagetracker '.$class.' pagedepth'.@$child->get_page_depth().'"><a href="/course/view.php?id='.$COURSE->id.'&amp;page='.$child->id.'" class="block-pagetracker '.$class.'">'.$childname.'</a></div>';
+            if (((@$this->config->allowlinks == 2 ||
+                    (@$this->config->allowlinks == 1 && $child->accessed)) && $isenabled) ||
+                            has_capability('block/page_tracker:accessallpages', $context)) {
+                $pageurl = new moodle_url('/course/view.php', array('id' => $COURSE->id, 'page' => $child->id));
+                $this->content->items[] = '<div class="block-pagetracker '.$class.' pagedepth'.@$child->get_page_depth().'"><a href="'.$pageurl.'" class="block-pagetracker '.$class.'">'.$childname.'</a></div>';
                 if (empty($this->config->hideaccessbullets)) {
                     $this->content->icons[] = '<img border="0" align="left" src="'.$image.'" width="15" />';
                 }
@@ -280,6 +273,19 @@ class block_page_tracker extends block_list {
             if ($child->has_children() && ($currentdepth > 0)) {
                 $this->print_sub_stations($child, $ticks, $current, $currentdepth - 1);
             }
+        }
+    }
+
+    /**
+     * Get distinct pages that have been viewed by the current user
+     * @return an array of page ids or null if empty.
+     */
+    protected function get_tracks() {
+        global $DB, $COURSE, $USER;
+
+        $params = array('courseid' => $COURSE->id, 'userid' => $USER->id);
+        if ($tracks = $DB->get_records('block_page_tracker', $params, 'id', 'DISTINCT pageid,pageid')) {
+            $this->tracks = array_keys($tracks);
         }
     }
 }

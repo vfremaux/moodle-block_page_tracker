@@ -16,6 +16,7 @@ $string['blockname'] = 'Etapes de formation';
 $string['configtitle'] = 'Titre du bloc (laisser vide pour le titre standard).';
 $string['depth'] = 'Profondeur';
 $string['displayerror'] = 'Une erreur est intervenue lors de la construction du contenu.';
+$string['errormissingpage'] = 'La page de départ de ce menu semble avoir été supprimée. Vous devez reconfigurer le bloc.';
 $string['pluginname'] = 'Etapes de formation';
 $string['root'] = 'Racine du cours';
 $string['startpage'] = 'Page de départ';
@@ -23,6 +24,15 @@ $string['yesonvisited'] = 'Uniquement sur les pages déjà vues';
 $string['hidedisabledlinks'] = 'Cacher complètement les liens désactivés';
 $string['usemenulabels'] = 'Utiliser les labels de menu';
 $string['hideaccessbullets'] = 'Cacher les marques d\'accès';
-
+$string['configdefaultallowlinks'] = 'Générer les liens (défaut)';
+$string['configdefaultallowlinks_desc'] = 'Valeur par défaut s\'appliquant à toute nouvelle instance';
+$string['configdefaulthidedisabledlinks'] = 'Cacher les liens inactifs (défaut)';
+$string['configdefaulthidedisabledlinks_desc'] = 'Valeur par défaut s\'appliquant à toute nouvelle instance';
+$string['configdefaultdepth'] = 'Profondeur (défaut)';
+$string['configdefaultdepth_desc'] = 'Valeur par défaut s\'appliquant à toute nouvelle instance';
+$string['configdefaultusemenulabels'] = 'Utiliser les labels du menu paginé (défaut)';
+$string['configdefaultusemenulabels_desc'] = 'Valeur par défaut s\'appliquant à toute nouvelle instance';
+$string['configdefaulthideaccessbullets'] = 'Cacher les marques d\'accès (défaut)';
+$string['configdefaulthideaccessbullets_desc'] = 'Valeur par défaut s\'appliquant à toute nouvelle instance';
 
 

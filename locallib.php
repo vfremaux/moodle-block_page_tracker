@@ -15,23 +15,33 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version details.
- *
  * @package    block_page_tracker
  * @category   blocks
- * @copyright  2008 onwards Valery Fremaux (valery.fremaux@gmail.com)
+ * @copyright  2003 onwards Valery Fremaux (valery.fremaux@gmail.com)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @author Valery Fremaux (valery.fremaux@gmail.com)
  */
 
-defined('MOODLE_INTERNAL') || die();
+function punch_track($courseid, $pageid, $userid) {
+    global $DB;
 
-$plugin->version   = 2016101105;        // The current plugin version (Date: YYYYMMDDXX).
-$plugin->requires  = 2014042900;        // Requires this Moodle version.
-$plugin->component = 'block_page_tracker'; // Full name of the plugin (used for diagnostics).
-$plugin->release = '2.7.0 (Build 2016101105)';
-$plugin->maturity = MATURITY_STABLE;
-$plugin->dependencies = array('format_page' => 2016030701);
+    if (empty($pageid)) {
+        return;
+    }
 
-// Non moodle attributes.
-$plugin->codeincrement = '2.7.0001';
+    $params = array('courseid' => $courseid, 'pageid' => $pageid, 'userid' => $userid);
+    if (!$track = $DB->get_record('block_page_tracker', $params)) {
+        $track = new StdClass;
+        $track->courseid = $courseid;
+        $track->userid = $userid;
+        $track->pageid = $pageid;
+
+        $track->firsttimeviewed = time();
+        $track->lasttimeviewed = time();
+        $track->views = 1;
+        $DB->insert_record('block_page_tracker', $track);
+    } else {
+        $track->lasttimeviewed = time();
+        $track->views++;
+        $DB->update_record('block_page_tracker', $track);
+    }
+}
