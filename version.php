@@ -17,11 +17,11 @@
 /**
  * Version details.
  *
- * @package    block_page_tracker
- * @category   blocks
- * @copyright  2008 onwards Valery Fremaux (valery.fremaux@gmail.com)
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @author Valery Fremaux (valery.fremaux@gmail.com)
+ * @package     block_page_tracker
+ * @category    blocks
+ * @author      Valery Fremaux <valery.fremaux@gmail.com>
+ * @copyright   2010 onwards Valery Fremaux (http://www.mylearningfactory.com)
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
