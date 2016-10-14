@@ -14,8 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Form for editing HTML block instances.
  *
@@ -24,8 +22,10 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright 2012 Valery Fremaux
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
- 
+defined('MOODLE_INTERNAL') || die();
+
 class block_page_tracker_edit_form extends block_edit_form {
+
     protected function specific_definition($mform) {
         global $DB, $CFG, $COURSE;
 
@@ -41,7 +41,8 @@ class block_page_tracker_edit_form extends block_edit_form {
         $linkoptions['0'] = get_string('no');
         $linkoptions['1'] = get_string('yesonvisited', 'block_page_tracker');
         $linkoptions['2'] = get_string('yes');
-        $mform->addElement('select', 'config_allowlinks', get_string('allowlinks', 'block_page_tracker'), $linkoptions, @$config->defaultallowlinks);
+        $label = get_string('allowlinks', 'block_page_tracker');
+        $mform->addElement('select', 'config_allowlinks', $label, $linkoptions, @$config->defaultallowlinks);
         $mform->setDefault('config_allowlinks', 1);
 
         $mform->addElement('checkbox', 'config_hidedisabledlinks', get_string('hidedisabledlinks', 'block_page_tracker'));
@@ -69,7 +70,7 @@ class block_page_tracker_edit_form extends block_edit_form {
         $mform->setDefault('config_hideaccessbullets', $config->defaulthideaccessbullets);
     }
 
-    function set_data($defaults, &$files = null) {
+    public function set_data($defaults, &$files = null) {
 
         if (!$this->block->user_can_edit() && !empty($this->block->config->title)) {
             // If a title has been set but the user cannot edit it format it nicely.
