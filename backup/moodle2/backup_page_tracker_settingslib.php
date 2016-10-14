@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -15,23 +16,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version details.
- *
- * @package     block_page_tracker
- * @category    blocks
- * @author      Valery Fremaux <valery.fremaux@gmail.com>
- * @copyright   2010 onwards Valery Fremaux (http://www.mylearningfactory.com)
+ * @package     block
+ * @subpackage  block_page_tracker
+ * @copyright   2015 onwards Valery Fremaux {valery.fremaux@gmail.com}
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-defined('MOODLE_INTERNAL') || die();
-
-$plugin->version   = 2016101105;        // The current plugin version (Date: YYYYMMDDXX).
-$plugin->requires  = 2016051900;        // Requires this Moodle version.
-$plugin->component = 'block_page_tracker'; // Full name of the plugin (used for diagnostics).
-$plugin->release = '3.1.0 (Build 2016101105)';
-$plugin->maturity = MATURITY_STABLE;
-$plugin->dependencies = array('format_page' => 2016030701);
-
-// Non moodle attributes.
-$plugin->codeincrement = '3.1.0001';
+defined('MOODLE_INTERNAL') || die;
