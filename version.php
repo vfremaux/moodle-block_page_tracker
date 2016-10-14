@@ -29,7 +29,7 @@ defined('MOODLE_INTERNAL') || die();
 $plugin->version   = 2016101105;        // The current plugin version (Date: YYYYMMDDXX).
 $plugin->requires  = 2015050500;        // Requires this Moodle version.
 $plugin->component = 'block_page_tracker'; // Full name of the plugin (used for diagnostics).
-$plugin->release = '2.9.0 (Build 2016101105)';
+$plugin->release = '2.9.1 (Build 2016101105)';
 $plugin->maturity = MATURITY_STABLE;
 $plugin->dependencies = array('format_page' => 2016030701);
 
