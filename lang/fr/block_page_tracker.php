@@ -23,6 +23,15 @@ $string['yesonvisited'] = 'Uniquement sur les pages déjà vues';
 $string['hidedisabledlinks'] = 'Cacher complètement les liens désactivés';
 $string['usemenulabels'] = 'Utiliser les labels de menu';
 $string['hideaccessbullets'] = 'Cacher les marques d\'accès';
-
+$string['configdefaultallowlinks'] = 'Générer les liens (défaut)';
+$string['configdefaultallowlinks_desc'] = 'Valeur par défaut s\'appliquant à toute nouvelle instance';
+$string['configdefaulthidedisabledlinks'] = 'Cacher les liens inactifs (défaut)';
+$string['configdefaulthidedisabledlinks_desc'] = 'Valeur par défaut s\'appliquant à toute nouvelle instance';
+$string['configdefaultdepth'] = 'Profondeur (défaut)';
+$string['configdefaultdepth_desc'] = 'Valeur par défaut s\'appliquant à toute nouvelle instance';
+$string['configdefaultusemenulabels'] = 'Utiliser les labels du menu paginé (défaut)';
+$string['configdefaultusemenulabels_desc'] = 'Valeur par défaut s\'appliquant à toute nouvelle instance';
+$string['configdefaulthideaccessbullets'] = 'Cacher les marques d\'accès (défaut)';
+$string['configdefaulthideaccessbullets_desc'] = 'Valeur par défaut s\'appliquant à toute nouvelle instance';
 
 
