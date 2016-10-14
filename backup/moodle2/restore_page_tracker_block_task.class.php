@@ -15,11 +15,12 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * @package moodlecore
- * @subpackage backup-moodle2
- * @copyright 2003 onwards Eloy Lafuente (stronk7) {@link http://stronk7.com}
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     block_page_tracker
+ * @subpackage  backup-moodle2
+ * @copyright   2016 onwards Valery Fremaux (valery.fremaux@gmail.com)
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+defined('MOODLE_INTERNAL') || die;
 
 /**
  * Specialised restore task for the page_tracker block
@@ -33,6 +34,7 @@ class restore_page_tracker_block_task extends restore_block_task {
     }
 
     protected function define_my_steps() {
+        $this->add_step(new restore_page_tracker_block_structure_step('page_tracker_structure', 'page_tracker.xml'));
     }
 
     public function get_fileareas() {
@@ -117,15 +119,15 @@ class restore_page_tracker_block_decode_content extends restore_decode_content {
         // Build the SQL dynamically here.
         $fieldslist = 't.' . implode(', t.', $this->fields);
         $sql = "
-            SELECT 
+            SELECT
                 t.id, $fieldslist
-            FROM 
+            FROM
                 {" . $this->tablename . "} t
-            JOIN 
+            JOIN
                 {backup_ids_temp} b ON b.newitemid = t.id
-            WHERE 
-                b.backupid = ? AND 
-                b.itemname = ? AND 
+            WHERE
+                b.backupid = ? AND
+                b.itemname = ? AND
                 t.blockname = 'page_tracker'
         ";
         $params = array($this->restoreid, $this->mapping);
