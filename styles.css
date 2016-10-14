@@ -15,7 +15,6 @@
     margin-bottom:6px;
 }
 
-
 .block-pagetracker-current {
     line-height:16px;
 }
@@ -81,6 +80,6 @@
 }
 
 .block-pagetracker.hidden{
-    opacity:0.5;
     -moz-opacity:0.5;
+    opacity:0.5;
 }
