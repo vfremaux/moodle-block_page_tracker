@@ -14,10 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+defined('MOODLE_INTERNAL') || die();
+
 /**
  * Form for editing page_tracker block instances.
  *
  * @package   block_page_tracker
+ * @category  blocks
  * @copyright 2012 Valery Fremaux
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -40,6 +43,10 @@ class block_page_tracker extends block_list {
         }
     }
 
+    public function has_config() {
+        return true;
+    }
+
     public function instance_allow_config() {
         return true;
     }
@@ -53,7 +60,7 @@ class block_page_tracker extends block_list {
     }
 
     function get_content() {
-        if ($this->content !== NULL) {
+        if ($this->content !== null) {
             return $this->content;
         }
 

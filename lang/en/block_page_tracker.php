@@ -23,3 +23,14 @@ $string['yesonvisited'] = 'Only on visited pages';
 $string['hidedisabledlinks'] = 'Hide disabled links';
 $string['usemenulabels'] = 'Use menu labels';
 $string['hideaccessbullets'] = 'Hide access marks';
+$string['configdefaultallowlinks'] = 'Default for link generation';
+$string['configdefaultallowlinks_desc'] = 'Default value for link generation that applies to any new instance';
+$string['configdefaulthidedisabledlinks'] = 'Default for hiding disabled links';
+$string['configdefaulthidedisabledlinks_desc'] = 'Default value for hiding disabled links that applies to any new instance';
+$string['configdefaultdepth'] = 'Default for depth';
+$string['configdefaultdepth_desc'] = 'Default value for depth that applies to any new instance';
+$string['configdefaultusemenulabels'] = 'Default for menu labels';
+$string['configdefaultusemenulabels_desc'] = 'Default value for menu labels that applies to any new instance';
+$string['configdefaulthideaccessbullets'] = 'Default for hiding bullets';
+$string['configdefaulthideaccessbullets_desc'] = 'Default value for hiding bullets that applies to any new instance';
+
