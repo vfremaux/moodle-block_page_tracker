@@ -202,7 +202,7 @@ class block_page_tracker extends block_list {
     }
 
     /**
-     * Recursive down scann into children to check if some 
+     * Recursive down scann into children to check if some
      * have been accessed already.
      * @param objectref &$page the parent course page
      */
