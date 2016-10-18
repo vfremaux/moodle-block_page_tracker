@@ -56,11 +56,11 @@ class block_page_tracker extends block_list {
         return true;
     }
 
-    public function applicable_formats() {
+    function applicable_formats() {
         return array('all' => false, 'course' => true, 'mod-*' => true);
     }
 
-    public function get_content() {
+    function get_content() {
         if ($this->content !== null) {
             return $this->content;
         }
