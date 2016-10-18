@@ -178,7 +178,7 @@ class block_page_tracker extends block_list {
                 $pageurl = new moodle_url('/course/view.php', array('id' => $courseid, 'page' => $page->id));
                 $str .= '<a href="'.$pageurl.'" class="block-pagetracker '.$class.'">'.$pagename.'</a>';
                 $str .= '</div>';
-                $this->content->items[] =  = $str;
+                $this->content->items[] = $str;
                 if (empty($this->config->hideaccessbullets)) {
                     $this->content->icons[] = '<img border="0" align="left" src="'.$image.'" width="15" />';
                 }
