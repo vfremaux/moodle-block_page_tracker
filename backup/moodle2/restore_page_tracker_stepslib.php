@@ -23,7 +23,7 @@
  */
 defined('MOODLE_INTERNAL') || die;
 
-/*
+/**
  * Define all the restore steps that wll be used by the restore_teams_block_task
  */
 
@@ -36,9 +36,12 @@ class restore_page_tracker_block_structure_step extends restore_structure_step {
 
         $paths = array();
 
-        // TODO : Check how to use userinfo.
-        $paths[] = new restore_path_element('block', '/block', true);
-        $paths[] = new restore_path_element('track', '/block/tracks/track');
+        // $userinfo = $this->get_setting_value('userinfo');
+
+        // if ($userinfo) {
+            $paths[] = new restore_path_element('block', '/block', true);
+            $paths[] = new restore_path_element('track', '/block/tracks/track');
+        // }
 
         return $paths;
     }
@@ -47,12 +50,11 @@ class restore_page_tracker_block_structure_step extends restore_structure_step {
         global $DB;
 
         // Nothing to do yet here.
-        assert(true);
     }
 
     /*
-     *
-     */
+    *
+    */
     public function process_track($data) {
         global $DB;
 

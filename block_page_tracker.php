@@ -79,10 +79,7 @@ class block_page_tracker extends block_list {
         return $this->content;
     }
 
-    /**
-     * Generates the bloc's full page summary
-     */
-    public function generate_summary() {
+    function generate_summary() {
         global $CFG, $USER, $COURSE, $DB, $OUTPUT;
 
         $context = context_block::instance($this->instance->id);
@@ -171,22 +168,14 @@ class block_page_tracker extends block_list {
                 $pagename = format_string($page->nameone);
             }
 
-            if (((@$this->config->allowlinks == 2 ||
-                    (@$this->config->allowlinks == 1 && $page->accessed)) && $isenabled) ||
-                            has_capability('block/page_tracker:accessallpages', $context)) {
-                $str = '<div class="block-pagetracker '.$class.' pagedepth'.@$page->get_page_depth().'">';
-                $pageurl = new moodle_url('/course/view.php', array('id' => $courseid, 'page' => $page->id));
-                $str .= '<a href="'.$pageurl.'" class="block-pagetracker '.$class.'">'.$pagename.'</a>';
-                $str .= '</div>';
-                $this->content->items[] = $str;
+            if (((@$this->config->allowlinks == 2 || (@$this->config->allowlinks == 1 && $page->accessed)) && $isenabled) || has_capability('block/page_tracker:accessallpages', $context)) {
+                $this->content->items[] = '<div class="block-pagetracker '.$class.' pagedepth'.@$page->get_page_depth().'"><a href="/course/view.php?id='.$courseid.'&amp;page='.$page->id.'" class="block-pagetracker '.$class.'">'.$pagename.'</a></div>';
                 if (empty($this->config->hideaccessbullets)) {
                     $this->content->icons[] = '<img border="0" align="left" src="'.$image.'" width="15" />';
                 }
             } else {
                 if (empty($this->config->hidedisabledlinks)) {
-                    $classes = 'block-pagetracker '.$class.' pagedepth'.@$page->get_page_depth();
-                    $str = '<div class="'.$classes.'">'.$pagename.'</div>';
-                    $this->content->items[] = $str;
+                    $this->content->items[] = '<div class="block-pagetracker '.$class.' pagedepth'.@$page->get_page_depth().'">'.$pagename.'</div>';
                     if (empty($this->config->hideaccessbullets)) {
                         $this->content->icons[] = '<img border="0" align="left" src="'.$image.'" width="15" />';
                     }
@@ -201,11 +190,9 @@ class block_page_tracker extends block_list {
         return $this->content;
     }
 
-    /**
-     * Recursive down scann into children to check if some
-     * have been accessed already.
-     * @param objectref &$page the parent course page
-     */
+   /**
+    * Recursive down scann
+    */
     public function check_childs_access(&$page) {
         global $USER, $COURSE, $DB;
 
@@ -230,14 +217,7 @@ class block_page_tracker extends block_list {
         return $complete;
     }
 
-    /**
-     * Recursive prining of children pages.
-     * @param objectref &$page the parent station
-     * @param &$ticks
-     * @param $current
-     * @param int $currentdepth the depth in hierarchy of the current page.
-     */
-    public function print_sub_stations(&$page, &$ticks, $current, $currentdepth) {
+    function print_sub_stations(&$page, &$ticks, $current, $currentdepth) {
         global $CFG, $COURSE, $OUTPUT;
 
         $context = context_block::instance($this->instance->id);
@@ -277,18 +257,13 @@ class block_page_tracker extends block_list {
                     (@$this->config->allowlinks == 1 && $child->accessed)) && $isenabled) ||
                             has_capability('block/page_tracker:accessallpages', $context)) {
                 $pageurl = new moodle_url('/course/view.php', array('id' => $COURSE->id, 'page' => $child->id));
-                $str = '<div class="block-pagetracker '.$class.' pagedepth'.@$child->get_page_depth().'">';
-                $str .= '<a href="'.$pageurl.'" class="block-pagetracker '.$class.'">'.$childname.'</a>';
-                $str .= '</div>';
-                $this->content->items[] = $str;
+                $this->content->items[] = '<div class="block-pagetracker '.$class.' pagedepth'.@$child->get_page_depth().'"><a href="'.$pageurl.'" class="block-pagetracker '.$class.'">'.$childname.'</a></div>';
                 if (empty($this->config->hideaccessbullets)) {
                     $this->content->icons[] = '<img border="0" align="left" src="'.$image.'" width="15" />';
                 }
             } else {
                 if (empty($this->config->hidedisabledlinks)) {
-                    $classes = 'block-pagetracker '.$class.' pagedepth'.@$child->get_page_depth();
-                    $str = '<div class="'.$classes.'">'.$childname.'</div>';
-                    $this->content->items[] = $str;
+                    $this->content->items[] = '<div class="block-pagetracker '.$class.' pagedepth'.@$child->get_page_depth().'">'.$childname.'</div>';
                     if (empty($this->config->hideaccessbullets)) {
                         $this->content->icons[] = '<img border="0" align="left" src="'.$image.'" width="15" />';
                     }
