@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -22,6 +21,7 @@
  * @copyright 2016 onwards Valery Fremaux (valery.fremaux@gmail.com)
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+defined('MOODLE_INTERNAL') || die;
 
 /**
  * Define all the backup steps that wll be used by the backup_page_tracker_block_task
@@ -35,8 +35,7 @@ class backup_page_tracker_block_structure_step extends backup_block_structure_st
     protected function define_structure() {
         global $DB;
 
-        // TODO : check how to get this information.
-        // $userinfo = $this->get_setting_value('userinfo');
+        // TODO : check how to get userinfo information.
 
         // Get the block.
         $block = $DB->get_record('block_instances', array('id' => $this->task->get_blockid()));
@@ -56,9 +55,8 @@ class backup_page_tracker_block_structure_step extends backup_block_structure_st
 
         // Define sources.
 
-        // if ($userinfo) {
-            $track->set_source_table('block_page_tracker', array('courseid' => backup::VAR_COURSEID));
-        // }
+        // TODO : check if user info is required or not.
+        $track->set_source_table('block_page_tracker', array('courseid' => backup::VAR_COURSEID));
 
         // ID Annotations (none).
         $track->annotate_ids('user', 'userid');
