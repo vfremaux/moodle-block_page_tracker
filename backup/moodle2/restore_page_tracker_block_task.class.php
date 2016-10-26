@@ -22,6 +22,7 @@
  */
 defined('MOODLE_INTERNAL') || die;
 
+require_once($CFG->dirroot.'/blocks/page_tracker/backup/moodle2/restore_page_tracker_stepslib.php');
 /**
  * Specialised restore task for the page_tracker block
  * (has own DB structures to backup)
