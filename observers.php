@@ -59,7 +59,7 @@ class block_page_tracker_event_observer {
         }
 
         $coursecontext = context_course::instance($e->courseid);
-        $rolestoreset = $e->other['reset_options']['unenrol_users'];
+        $rolestoreset = @$e->other['reset_options']['unenrol_users'];
 
         if (!empty($rolestoreset)) {
             foreach ($rolestoreset as $roleid) {
