@@ -96,18 +96,41 @@ class block_page_tracker extends block_list {
             @$this->config->startpage = 0;
         }
 
-        if ($this->config->startpage) {
+        if ($this->config->startpage > 0) {
             if ($startpage = course_page::get($this->config->startpage, $COURSE->id)) {
                 $pages = $startpage->get_children();
             } else {
                 $this->content->footer = get_string('errormissingpage', 'block_page_tracker');
                 return $this->content;
             }
+        } else if ($this->config->startpage == -1) {
+            $startpage = course_page::get_current_page($courseid);
+            $pages = $startpage->get_children();
+        } else if ($this->config->startpage == -2) {
+            $startpage = course_page::get_current_page($courseid);
+            $parent = $startpage->get_parent();
+            if (!empty($parent)) {
+                $pages = $parent->get_children();
+                $startpage = $parent;
+            } else {
+                $pages = course_page::get_all_pages($courseid, 'nested');
+            }
         } else {
             $pages = course_page::get_all_pages($courseid, 'nested');
         }
 
         $current = course_page::get_current_page($courseid);
+
+        $tmp = $startpage;
+        // Remove childs to only have this page.
+        if (!empty($parent)) {
+            $tmp->childs = null;
+            array_unshift($pages, $tmp);
+        }
+        while ($tmp = $tmp->get_parent()) {
+            $tmp->childs = null;
+            array_unshift($pages, $tmp);
+        }
 
         if (empty($pages)) {
             return '';
@@ -171,20 +194,21 @@ class block_page_tracker extends block_list {
                 $pagename = format_string($page->nameone);
             }
 
+            $depthclass = 'pagedepth'.@$page->get_page_depth();
             if (((@$this->config->allowlinks == 2 ||
                     (@$this->config->allowlinks == 1 && $page->accessed)) && $isenabled) ||
                             has_capability('block/page_tracker:accessallpages', $context)) {
-                $str = '<div class="block-pagetracker '.$class.' pagedepth'.@$page->get_page_depth().'">';
+                $str = '<div class="block-pagetracker '.$class.' '.$depthclass.'">';
                 $pageurl = new moodle_url('/course/view.php', array('id' => $courseid, 'page' => $page->id));
                 $str .= '<a href="'.$pageurl.'" class="block-pagetracker '.$class.'">'.$pagename.'</a>';
                 $str .= '</div>';
                 $this->content->items[] = $str;
                 if (empty($this->config->hideaccessbullets)) {
-                    $this->content->icons[] = '<img border="0" align="left" src="'.$image.'" width="15" />';
+                    $this->content->icons[] = '<img border="0" align="left" src="'.$image.'" width="15" class="img'.$depthclass.'" />';
                 }
             } else {
                 if (empty($this->config->hidedisabledlinks)) {
-                    $classes = 'block-pagetracker '.$class.' pagedepth'.@$page->get_page_depth();
+                    $classes = 'block-pagetracker '.$class.' '.$depthclass;
                     $str = '<div class="'.$classes.'">'.$pagename.'</div>';
                     $this->content->items[] = $str;
                     if (empty($this->config->hideaccessbullets)) {
