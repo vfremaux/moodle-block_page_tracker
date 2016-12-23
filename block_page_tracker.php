@@ -121,15 +121,17 @@ class block_page_tracker extends block_list {
 
         $current = course_page::get_current_page($courseid);
 
-        $tmp = $startpage;
-        // Remove childs to only have this page.
-        if (!empty($parent)) {
-            $tmp->childs = null;
-            array_unshift($pages, $tmp);
-        }
-        while ($tmp = $tmp->get_parent()) {
-            $tmp->childs = null;
-            array_unshift($pages, $tmp);
+        if ($this->config->startpage != 0) {
+            $tmp = $startpage;
+            // Remove childs to only have this page.
+            if (!empty($parent)) {
+                $tmp->childs = null;
+                array_unshift($pages, $tmp);
+            }
+            while ($tmp = $tmp->get_parent()) {
+                $tmp->childs = null;
+                array_unshift($pages, $tmp);
+            }
         }
 
         if (empty($pages)) {
