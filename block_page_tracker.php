@@ -121,7 +121,7 @@ class block_page_tracker extends block_list {
 
         $current = course_page::get_current_page($courseid);
 
-        if ($this->config->startpage != 0) {
+        if (!empty($startpage)) {
             $tmp = $startpage;
             // Remove childs to only have this page.
             if (!empty($parent)) {
