@@ -12,7 +12,16 @@
 }
 
 .block_page_tracker li {
-    margin-bottom:6px !important;
+    margin-bottom:6px;
+}
+
+/* fix boost theme */
+.block-pagetracker.current::before {
+    border:none!important;
+}
+
+.block-pagetracker.current a {
+    font-weight: bolder;
 }
 
 .block-pagetracker-current {
@@ -59,29 +68,24 @@
     padding-left:40px;
 }
 
-#page-region-pre .pagedepth0,
-#region-pre .pagedepth0{
-    padding-left:10px;
-}
-
 #page-region-pre .pagedepth1,
 #region-pre .pagedepth1{
-    padding-left:20px;
+    padding-left:8px;
 }
 
 #page-region-pre .pagedepth2,
 #region-pre .pagedepth2{
-    padding-left:30px;
+    padding-left:16px;
 }
 
 #page-region-pre .pagedepth3,
 #region-pre .pagedepth3{
-    padding-left:40px;
+    padding-left:24px;
 }
 
 #page-region-pre .pagedepth4,
 #region-pre .pagedepth4{
-    padding-left:50px;
+    padding-left:32px;
 }
 
 .block-pagetracker.hidden{
