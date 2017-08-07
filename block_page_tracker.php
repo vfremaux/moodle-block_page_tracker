@@ -28,6 +28,7 @@ defined('MOODLE_INTERNAL') || die();
  * generates a menu list of child pages ("stations") for a paged format course
  */
 
+require_once($CFG->dirroot.'/blocks/page_tracker/locallib.php');
 require_once($CFG->dirroot.'/course/format/page/lib.php');
 
 class block_page_tracker extends block_list {
@@ -96,6 +97,7 @@ class block_page_tracker extends block_list {
             @$this->config->startpage = 0;
         }
 
+        $reldepth = 0;
         if ($this->config->startpage > 0) {
             if ($startpage = course_page::get($this->config->startpage, $COURSE->id)) {
                 $pages = $startpage->get_children();
@@ -115,6 +117,25 @@ class block_page_tracker extends block_list {
             } else {
                 $pages = course_page::get_all_pages($courseid, 'nested');
             }
+        } else if ($this->config->startpage == -3) {
+            // Get all upper nav.
+            $current = course_page::get_current_page($courseid);
+            $reldepth = $current->get_page_depth();
+            $pages = course_page::get_all_pages($courseid, 'nested', true, 0, $reldepth);
+            $flat = course_page::get_all_pages($courseid, 'flat'); // No cost.
+
+            // Find current's parent and plug current into tree.
+            if ($current->parent) {
+                $flat[$current->parent]->childs = array($current->id => $current);
+            }
+            $flat[$current->id] = $current;
+
+            // block_page_tracker_debug_print_tree($pages);
+
+            /*
+            $depth = (!empty($this->config->depth)) ? $this->config->depth : 99;
+            $flat[$current->id]->get_children($depth); // Load subtree in the startpage instance (wich is current).
+            */
         } else {
             $pages = course_page::get_all_pages($courseid, 'nested');
         }
@@ -219,8 +240,8 @@ class block_page_tracker extends block_list {
                 }
             }
 
-            if ($page->has_children() && ($this->config->depth - 1 > 0)) {
-                $this->print_sub_stations($page, $ticks, $current, $this->config->depth - 2);
+            if ($page->has_children() && (($reldepth + $this->config->depth - 1) > 0)) {
+                $this->print_sub_stations($page, $ticks, $current, $reldepth + $this->config->depth - 2);
             }
         }
 
@@ -257,7 +278,7 @@ class block_page_tracker extends block_list {
     }
 
     /**
-     * Recursive prining of children pages.
+     * Recursive printing of children pages.
      * @param objectref &$page the parent station
      * @param &$ticks
      * @param $current

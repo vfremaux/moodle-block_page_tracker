@@ -35,6 +35,7 @@ $string['errormissingpage'] = 'La page de départ de ce menu semble avoir été 
 $string['pluginname'] = 'Etapes de formation';
 $string['root'] = 'Racine du cours';
 $string['self'] = '-- La page courante';
+$string['selfupper'] = '-- Navigation supérieure et arbre courant';
 $string['parent'] = '-- La page parente';
 $string['startpage'] = 'Page de départ';
 $string['yesonvisited'] = 'Uniquement sur les pages déjà vues';
