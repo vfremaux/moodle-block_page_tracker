@@ -28,6 +28,7 @@ defined('MOODLE_INTERNAL') || die();
  * generates a menu list of child pages ("stations") for a paged format course
  */
 
+require_once($CFG->dirroot.'/blocks/page_tracker/locallib.php');
 require_once($CFG->dirroot.'/course/format/page/lib.php');
 
 class block_page_tracker extends block_list {
@@ -96,13 +97,52 @@ class block_page_tracker extends block_list {
             @$this->config->startpage = 0;
         }
 
+<<<<<<< HEAD
         if ($this->config->startpage) {
+=======
+        $reldepth = 0;
+        if ($this->config->startpage > 0) {
+>>>>>>> MOODLE_33_STABLE
             if ($startpage = course_page::get($this->config->startpage, $COURSE->id)) {
                 $pages = $startpage->get_children();
             } else {
                 $this->content->footer = get_string('errormissingpage', 'block_page_tracker');
                 return $this->content;
             }
+<<<<<<< HEAD
+=======
+        } else if ($this->config->startpage == -1) {
+            $startpage = course_page::get_current_page($courseid);
+            $pages = $startpage->get_children();
+        } else if ($this->config->startpage == -2) {
+            $startpage = course_page::get_current_page($courseid);
+            $parent = $startpage->get_parent();
+            if (!empty($parent)) {
+                $pages = $parent->get_children();
+                $startpage = $parent;
+            } else {
+                $pages = course_page::get_all_pages($courseid, 'nested');
+            }
+        } else if ($this->config->startpage == -3) {
+            // Get all upper nav.
+            $current = course_page::get_current_page($courseid);
+            $reldepth = $current->get_page_depth();
+            $pages = course_page::get_all_pages($courseid, 'nested', true, 0, $reldepth);
+            $flat = course_page::get_all_pages($courseid, 'flat'); // No cost.
+
+            // Find current's parent and plug current into tree.
+            if ($current->parent) {
+                $flat[$current->parent]->childs = array($current->id => $current);
+            }
+            $flat[$current->id] = $current;
+
+            // block_page_tracker_debug_print_tree($pages);
+
+            /*
+            $depth = (!empty($this->config->depth)) ? $this->config->depth : 99;
+            $flat[$current->id]->get_children($depth); // Load subtree in the startpage instance (wich is current).
+            */
+>>>>>>> MOODLE_33_STABLE
         } else {
             $pages = course_page::get_all_pages($courseid, 'nested');
         }
@@ -193,8 +233,8 @@ class block_page_tracker extends block_list {
                 }
             }
 
-            if ($page->has_children() && ($this->config->depth - 1 > 0)) {
-                $this->print_sub_stations($page, $ticks, $current, $this->config->depth - 2);
+            if ($page->has_children() && (($reldepth + $this->config->depth - 1) > 0)) {
+                $this->print_sub_stations($page, $ticks, $current, $reldepth + $this->config->depth - 2);
             }
         }
 
@@ -231,7 +271,7 @@ class block_page_tracker extends block_list {
     }
 
     /**
-     * Recursive prining of children pages.
+     * Recursive printing of children pages.
      * @param objectref &$page the parent station
      * @param &$ticks
      * @param $current
