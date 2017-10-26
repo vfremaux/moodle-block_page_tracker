@@ -28,6 +28,7 @@ defined('MOODLE_INTERNAL') || die();
  * generates a menu list of child pages ("stations") for a paged format course
  */
 
+require_once($CFG->dirroot.'/blocks/page_tracker/locallib.php');
 require_once($CFG->dirroot.'/course/format/page/lib.php');
 
 class block_page_tracker extends block_list {
@@ -96,18 +97,63 @@ class block_page_tracker extends block_list {
             @$this->config->startpage = 0;
         }
 
-        if ($this->config->startpage) {
+        $reldepth = 0;
+        if ($this->config->startpage > 0) {
             if ($startpage = course_page::get($this->config->startpage, $COURSE->id)) {
                 $pages = $startpage->get_children();
             } else {
                 $this->content->footer = get_string('errormissingpage', 'block_page_tracker');
                 return $this->content;
             }
+        } else if ($this->config->startpage == -1) {
+            $startpage = course_page::get_current_page($courseid);
+            $pages = $startpage->get_children();
+        } else if ($this->config->startpage == -2) {
+            $startpage = course_page::get_current_page($courseid);
+            $parent = $startpage->get_parent();
+            if (!empty($parent)) {
+                $pages = $parent->get_children();
+                $startpage = $parent;
+            } else {
+                $pages = course_page::get_all_pages($courseid, 'nested');
+            }
+        } else if ($this->config->startpage == -3) {
+            // Get all upper nav.
+            $current = course_page::get_current_page($courseid);
+            $reldepth = $current->get_page_depth();
+            $pages = course_page::get_all_pages($courseid, 'nested', true, 0, $reldepth);
+            $flat = course_page::get_all_pages($courseid, 'flat'); // No cost.
+
+            // Find current's parent and plug current into tree.
+            if ($current->parent) {
+                $flat[$current->parent]->childs = array($current->id => $current);
+            }
+            $flat[$current->id] = $current;
+
+            // block_page_tracker_debug_print_tree($pages);
+
+            /*
+            $depth = (!empty($this->config->depth)) ? $this->config->depth : 99;
+            $flat[$current->id]->get_children($depth); // Load subtree in the startpage instance (wich is current).
+            */
         } else {
             $pages = course_page::get_all_pages($courseid, 'nested');
         }
 
         $current = course_page::get_current_page($courseid);
+
+        if (!empty($startpage)) {
+            $tmp = $startpage;
+            // Remove childs to only have this page.
+            if (!empty($parent)) {
+                $tmp->childs = null;
+                array_unshift($pages, $tmp);
+            }
+            while ($tmp = $tmp->get_parent()) {
+                $tmp->childs = null;
+                array_unshift($pages, $tmp);
+            }
+        }
 
         if (empty($pages)) {
             return '';
@@ -115,9 +161,9 @@ class block_page_tracker extends block_list {
 
         // Resolve tickimage locations.
         $ticks = new StdClass();
-        $ticks->image = $OUTPUT->pix_url('tick_big', 'block_page_tracker');
-        $ticks->imagepartial = $OUTPUT->pix_url('tick_big_partial', 'block_page_tracker');
-        $ticks->imageempty = $OUTPUT->pix_url('tick_big_empty', 'block_page_tracker');
+        $ticks->image = $OUTPUT->pix_url('tick_green_big', 'block_page_tracker');
+        $ticks->imagepartial = $OUTPUT->pix_url('tick_green_big_partial', 'block_page_tracker');
+        $ticks->imageempty = $OUTPUT->pix_url('tick_green_big_empty', 'block_page_tracker');
 
         $this->content->items = array();
         $this->content->icons = array();
@@ -171,20 +217,21 @@ class block_page_tracker extends block_list {
                 $pagename = format_string($page->nameone);
             }
 
+            $depthclass = 'pagedepth'.@$page->get_page_depth();
             if (((@$this->config->allowlinks == 2 ||
                     (@$this->config->allowlinks == 1 && $page->accessed)) && $isenabled) ||
                             has_capability('block/page_tracker:accessallpages', $context)) {
-                $str = '<div class="block-pagetracker '.$class.' pagedepth'.@$page->get_page_depth().'">';
+                $str = '<div class="block-pagetracker '.$class.' '.$depthclass.'">';
                 $pageurl = new moodle_url('/course/view.php', array('id' => $courseid, 'page' => $page->id));
                 $str .= '<a href="'.$pageurl.'" class="block-pagetracker '.$class.'">'.$pagename.'</a>';
                 $str .= '</div>';
                 $this->content->items[] = $str;
                 if (empty($this->config->hideaccessbullets)) {
-                    $this->content->icons[] = '<img border="0" align="left" src="'.$image.'" width="15" />';
+                    $this->content->icons[] = '<img border="0" align="left" src="'.$image.'" width="15" class="img'.$depthclass.'" />';
                 }
             } else {
                 if (empty($this->config->hidedisabledlinks)) {
-                    $classes = 'block-pagetracker '.$class.' pagedepth'.@$page->get_page_depth();
+                    $classes = 'block-pagetracker '.$class.' '.$depthclass;
                     $str = '<div class="'.$classes.'">'.$pagename.'</div>';
                     $this->content->items[] = $str;
                     if (empty($this->config->hideaccessbullets)) {
@@ -193,8 +240,8 @@ class block_page_tracker extends block_list {
                 }
             }
 
-            if ($page->has_children() && ($this->config->depth - 1 > 0)) {
-                $this->print_sub_stations($page, $ticks, $current, $this->config->depth - 2);
+            if ($page->has_children() && (($reldepth + $this->config->depth - 1) > 0)) {
+                $this->print_sub_stations($page, $ticks, $current, $reldepth + $this->config->depth - 2);
             }
         }
 
@@ -231,7 +278,7 @@ class block_page_tracker extends block_list {
     }
 
     /**
-     * Recursive prining of children pages.
+     * Recursive printing of children pages.
      * @param objectref &$page the parent station
      * @param &$ticks
      * @param $current
