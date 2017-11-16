@@ -151,7 +151,9 @@ class block_page_tracker extends block_list {
             }
             while ($tmp = $tmp->get_parent()) {
                 $tmp->childs = null;
-                array_unshift($pages, $tmp);
+                if (!empty($pages)) {
+                    array_unshift($pages, $tmp);
+                }
             }
         }
 
