@@ -35,6 +35,7 @@ $string['errormissingpage'] = 'The start page configured for this block seems be
 $string['pluginname'] = 'Learning Stations';
 $string['root'] = 'Course root';
 $string['self'] = '-- The current page';
+$string['selfupper'] = '-- Upper nav and current tree';
 $string['parent'] = '-- The parent page';
 $string['startpage'] = 'Start page';
 $string['yesonvisited'] = 'Only on visited pages';
