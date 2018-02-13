@@ -22,7 +22,11 @@
  */
 defined('MOODLE_INTERNAL') || die;
 
+<<<<<<< HEAD
 require_once('backup_page_tracker_stepslib.php');
+=======
+require_once($CFG->dirroot.'/blocks/page_tracker/backup/moodle2/backup_page_tracker_stepslib.php');
+>>>>>>> MOODLE_34_STABLE
 
 /**
  * Specialised backup task for the html block

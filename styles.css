@@ -14,9 +14,10 @@
 }
 
 .block_page_tracker li {
-    margin-bottom:6px;
+    margin-bottom:6px !important;
 }
 
+<<<<<<< HEAD
 /* fix boost theme */
 .block-pagetracker.current::before {
     border:none!important;
@@ -26,6 +27,8 @@
     font-weight: bolder;
 }
 
+=======
+>>>>>>> MOODLE_34_STABLE
 .block-pagetracker.current {
     line-height:16px;
 }
@@ -75,24 +78,29 @@
     padding-left:40px;
 }
 
+#page-region-pre .pagedepth0,
+#region-pre .pagedepth0{
+    padding-left:10px;
+}
+
 #page-region-pre .pagedepth1,
 #region-pre .pagedepth1{
-    padding-left:8px;
+    padding-left:20px;
 }
 
 #page-region-pre .pagedepth2,
 #region-pre .pagedepth2{
-    padding-left:16px;
+    padding-left:30px;
 }
 
 #page-region-pre .pagedepth3,
 #region-pre .pagedepth3{
-    padding-left:24px;
+    padding-left:40px;
 }
 
 #page-region-pre .pagedepth4,
 #region-pre .pagedepth4{
-    padding-left:32px;
+    padding-left:50px;
 }
 
 .block-pagetracker.hidden{

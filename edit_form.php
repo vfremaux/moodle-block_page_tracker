@@ -51,11 +51,17 @@ class block_page_tracker_edit_form extends block_edit_form {
         $pageoptions = array();
         $pageoptions['0'] = get_string('root', 'block_page_tracker');
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
         $pageoptions['-1'] = get_string('self', 'block_page_tracker');
         $pageoptions['-2'] = get_string('parent', 'block_page_tracker');
         $pageoptions['-3'] = get_string('selfupper', 'block_page_tracker');
 >>>>>>> MOODLE_33_STABLE
+=======
+        $pageoptions['-1'] = get_string('self', 'block_page_tracker');
+        $pageoptions['-2'] = get_string('parent', 'block_page_tracker');
+        $pageoptions['-3'] = get_string('selfupper', 'block_page_tracker');
+>>>>>>> MOODLE_34_STABLE
         $pages = course_page::get_all_pages($COURSE->id, 'flat');
         foreach ($pages as $p) {
             $pageoptions[$p->id] = format_string($p->nametwo);

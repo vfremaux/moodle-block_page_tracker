@@ -35,11 +35,17 @@ $string['errormissingpage'] = 'La page de départ de ce menu semble avoir été 
 $string['pluginname'] = 'Etapes de formation';
 $string['root'] = 'Racine du cours';
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 $string['self'] = '-- La page courante';
 $string['selfupper'] = '-- Navigation supérieure et arbre courant';
 $string['parent'] = '-- La page parente';
 >>>>>>> MOODLE_33_STABLE
+=======
+$string['self'] = '-- La page courante';
+$string['selfupper'] = '-- Navigation supérieure et arbre courant';
+$string['parent'] = '-- La page parente';
+>>>>>>> MOODLE_34_STABLE
 $string['startpage'] = 'Page de départ';
 $string['yesonvisited'] = 'Uniquement sur les pages déjà vues';
 $string['hidedisabledlinks'] = 'Cacher complètement les liens désactivés';

@@ -98,11 +98,16 @@ class block_page_tracker extends block_list {
         }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
         if ($this->config->startpage) {
 =======
         $reldepth = 0;
         if ($this->config->startpage > 0) {
 >>>>>>> MOODLE_33_STABLE
+=======
+        $reldepth = 0;
+        if ($this->config->startpage > 0) {
+>>>>>>> MOODLE_34_STABLE
             if ($startpage = course_page::get($this->config->startpage, $COURSE->id)) {
                 $pages = $startpage->get_children();
             } else {
@@ -110,7 +115,10 @@ class block_page_tracker extends block_list {
                 return $this->content;
             }
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> MOODLE_34_STABLE
         } else if ($this->config->startpage == -1) {
             $startpage = course_page::get_current_page($courseid);
             $pages = $startpage->get_children();
@@ -142,12 +150,30 @@ class block_page_tracker extends block_list {
             $depth = (!empty($this->config->depth)) ? $this->config->depth : 99;
             $flat[$current->id]->get_children($depth); // Load subtree in the startpage instance (wich is current).
             */
+<<<<<<< HEAD
 >>>>>>> MOODLE_33_STABLE
+=======
+>>>>>>> MOODLE_34_STABLE
         } else {
             $pages = course_page::get_all_pages($courseid, 'nested');
         }
 
         $current = course_page::get_current_page($courseid);
+
+        if (!empty($startpage)) {
+            $tmp = $startpage;
+            // Remove childs to only have this page.
+            if (!empty($parent)) {
+                $tmp->childs = null;
+                array_unshift($pages, $tmp);
+            }
+            while ($tmp = $tmp->get_parent()) {
+                $tmp->childs = null;
+                if (!empty($pages)) {
+                    array_unshift($pages, $tmp);
+                }
+            }
+        }
 
         if (empty($pages)) {
             return '';
@@ -155,9 +181,15 @@ class block_page_tracker extends block_list {
 
         // Resolve tickimage locations.
         $ticks = new StdClass();
+<<<<<<< HEAD
         $ticks->image = $OUTPUT->pix_url('tick_big', 'block_page_tracker');
         $ticks->imagepartial = $OUTPUT->pix_url('tick_big_partial', 'block_page_tracker');
         $ticks->imageempty = $OUTPUT->pix_url('tick_big_empty', 'block_page_tracker');
+=======
+        $ticks->image = $OUTPUT->image_url('tick_green_big', 'block_page_tracker');
+        $ticks->imagepartial = $OUTPUT->image_url('tick_green_big_partial', 'block_page_tracker');
+        $ticks->imageempty = $OUTPUT->image_url('tick_green_big_empty', 'block_page_tracker');
+>>>>>>> MOODLE_34_STABLE
 
         $this->content->items = array();
         $this->content->icons = array();
@@ -211,20 +243,32 @@ class block_page_tracker extends block_list {
                 $pagename = format_string($page->nameone);
             }
 
+<<<<<<< HEAD
             if (((@$this->config->allowlinks == 2 ||
                     (@$this->config->allowlinks == 1 && $page->accessed)) && $isenabled) ||
                             has_capability('block/page_tracker:accessallpages', $context)) {
                 $str = '<div class="block-pagetracker '.$class.' pagedepth'.@$page->get_page_depth().'">';
+=======
+            $depthclass = 'pagedepth'.@$page->get_page_depth();
+            if (((@$this->config->allowlinks == 2 ||
+                    (@$this->config->allowlinks == 1 && $page->accessed)) && $isenabled) ||
+                            has_capability('block/page_tracker:accessallpages', $context)) {
+                $str = '<div class="block-pagetracker '.$class.' '.$depthclass.'">';
+>>>>>>> MOODLE_34_STABLE
                 $pageurl = new moodle_url('/course/view.php', array('id' => $courseid, 'page' => $page->id));
                 $str .= '<a href="'.$pageurl.'" class="block-pagetracker '.$class.'">'.$pagename.'</a>';
                 $str .= '</div>';
                 $this->content->items[] = $str;
                 if (empty($this->config->hideaccessbullets)) {
-                    $this->content->icons[] = '<img border="0" align="left" src="'.$image.'" width="15" />';
+                    $this->content->icons[] = '<img border="0" align="left" src="'.$image.'" width="15" class="img'.$depthclass.'" />';
                 }
             } else {
                 if (empty($this->config->hidedisabledlinks)) {
+<<<<<<< HEAD
                     $classes = 'block-pagetracker '.$class.' pagedepth'.@$page->get_page_depth();
+=======
+                    $classes = 'block-pagetracker '.$class.' '.$depthclass;
+>>>>>>> MOODLE_34_STABLE
                     $str = '<div class="'.$classes.'">'.$pagename.'</div>';
                     $this->content->items[] = $str;
                     if (empty($this->config->hideaccessbullets)) {

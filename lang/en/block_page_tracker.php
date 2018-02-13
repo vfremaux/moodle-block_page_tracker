@@ -35,11 +35,17 @@ $string['errormissingpage'] = 'The start page configured for this block seems be
 $string['pluginname'] = 'Learning Stations';
 $string['root'] = 'Course root';
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 $string['self'] = '-- The current page';
 $string['selfupper'] = '-- Upper nav and current tree';
 $string['parent'] = '-- The parent page';
 >>>>>>> MOODLE_33_STABLE
+=======
+$string['self'] = '-- The current page';
+$string['selfupper'] = '-- Upper nav and current tree';
+$string['parent'] = '-- The parent page';
+>>>>>>> MOODLE_34_STABLE
 $string['startpage'] = 'Start page';
 $string['yesonvisited'] = 'Only on visited pages';
 $string['hidedisabledlinks'] = 'Hide disabled links';
