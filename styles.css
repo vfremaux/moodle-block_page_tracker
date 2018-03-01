@@ -17,18 +17,6 @@
     margin-bottom:6px !important;
 }
 
-<<<<<<< HEAD
-/* fix boost theme */
-.block-pagetracker.current::before {
-    border:none!important;
-}
-
-.block-pagetracker.current a {
-    font-weight: bolder;
-}
-
-=======
->>>>>>> MOODLE_34_STABLE
 .block-pagetracker.current {
     line-height:16px;
 }
