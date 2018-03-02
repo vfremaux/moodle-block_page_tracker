@@ -47,3 +47,22 @@ function punch_track($courseid, $pageid, $userid) {
         $DB->update_record('block_page_tracker', $track);
     }
 }
+
+function block_page_tracker_debug_print_tree($pages) {
+    foreach ($pages as $p) {
+        echo "Page ".$p->id.' '.$p->nameone.'<br/>';
+        if (!empty($p->childs)) {
+            block_page_tracker_debug_print_tree_rec($p, '&ensp;&ensp;&ensp;');
+        }
+    }
+}
+
+function block_page_tracker_debug_print_tree_rec($page, $indent) {
+
+    foreach ($page->childs as $c) {
+        echo "{$indent}Page ".$c->id.' '.$c->nameone.'<br/>';
+        if (!empty($c->childs)) {
+            block_page_tracker_debug_print_tree_rec($c, $indent.'&ensp;&ensp;&ensp;');
+        }
+    }
+}
