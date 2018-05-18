@@ -18,11 +18,14 @@ cache:
 php:
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
  - 5.6
 =======
 >>>>>>> MOODLE_34_STABLE
 =======
  - 5.6
+>>>>>>> MOODLE_34_STABLE
+=======
 >>>>>>> MOODLE_34_STABLE
  - 7.0
  - 7.1
