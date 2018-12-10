@@ -58,7 +58,7 @@ class block_page_tracker extends block_list {
     }
 
     public function applicable_formats() {
-        return array('all' => false, 'course' => true, 'mod-*' => true);
+        return array('all' => false, 'course' => true);
     }
 
     public function get_content() {
@@ -163,9 +163,9 @@ class block_page_tracker extends block_list {
 
         // Resolve tickimage locations.
         $ticks = new StdClass();
-        $ticks->image = $OUTPUT->pix_url('tick_green_big', 'block_page_tracker');
-        $ticks->imagepartial = $OUTPUT->pix_url('tick_green_big_partial', 'block_page_tracker');
-        $ticks->imageempty = $OUTPUT->pix_url('tick_green_big_empty', 'block_page_tracker');
+        $ticks->image = $OUTPUT->image_url('tick_green_big', 'block_page_tracker');
+        $ticks->imagepartial = $OUTPUT->image_url('tick_green_big_partial', 'block_page_tracker');
+        $ticks->imageempty = $OUTPUT->image_url('tick_green_big_empty', 'block_page_tracker');
 
         $this->content->items = array();
         $this->content->icons = array();
