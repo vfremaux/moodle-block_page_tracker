@@ -58,7 +58,7 @@ class block_page_tracker extends block_list {
     }
 
     public function applicable_formats() {
-        return array('all' => false, 'course' => true, 'mod-*' => true);
+        return array('all' => false, 'course' => true);
     }
 
     public function get_content() {

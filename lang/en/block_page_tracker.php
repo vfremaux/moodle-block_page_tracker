@@ -22,8 +22,12 @@
  * @package block_page_tracker
  */
 
+// Capabilities.
 $string['page_tracker:addinstance'] = 'Can add an instance';
 $string['page_tracker:accessallpages'] = 'Can access all pages';
+
+// Privacy.
+$string['privacy:metadata'] = 'The Page Tracker block does not store any personal data about any user.';
 
 $string['alllevels'] = 'All levels';
 $string['allowlinks'] = 'Allow links generation';

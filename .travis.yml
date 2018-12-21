@@ -20,6 +20,7 @@ php:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
  - 5.6
 =======
 >>>>>>> MOODLE_34_STABLE
@@ -59,12 +60,21 @@ env:
  - 7.2
 
 env:
+=======
+ - 7.1
+ - 7.2
+
+env:
+>>>>>>> MOODLE_36_STABLE
   global:
     - MOODLE_BRANCH=MOODLE_35_STABLE
   matrix:
     - DB=mysqli
     - DB=pgsql
+<<<<<<< HEAD
 >>>>>>> MOODLE_35_STABLE
+=======
+>>>>>>> MOODLE_36_STABLE
 
 before_install:
   - phpenv config-rm xdebug.ini
