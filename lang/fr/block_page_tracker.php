@@ -27,12 +27,12 @@ $string['page_tracker:accessallpages'] = 'Voit les liens pour vers toutes les pa
 
 $string['alllevels'] = 'Tous les niveaux';
 $string['allowlinks'] = 'Génère des liens';
-$string['blockname'] = 'Etapes de formation';
-$string['configtitle'] = 'Titre du bloc (laisser vide pour le titre standard).';
+$string['blockname'] = 'Sommaire de cours';
+$string['configtitle'] = 'Titre du sommaire (laisser vide pour le titre standard).';
 $string['depth'] = 'Profondeur';
 $string['displayerror'] = 'Une erreur est intervenue lors de la construction du contenu.';
-$string['errormissingpage'] = 'La page de départ de ce menu semble avoir été supprimée. Vous devez reconfigurer le bloc.';
-$string['pluginname'] = 'Etapes de formation';
+$string['errormissingpage'] = 'La page de départ de ce menu semble avoir été supprimée. Vous devez reconfigurer le sommaire.';
+$string['pluginname'] = 'Sommaire de cours';
 $string['root'] = 'Racine du cours';
 $string['self'] = '-- La page courante';
 $string['selfupper'] = '-- Navigation supérieure et arbre courant';
@@ -40,7 +40,7 @@ $string['parent'] = '-- La page parente';
 $string['startpage'] = 'Page de départ';
 $string['yesonvisited'] = 'Uniquement sur les pages déjà vues';
 $string['hidedisabledlinks'] = 'Cacher complètement les liens désactivés';
-$string['usemenulabels'] = 'Utiliser les labels de menu';
+$string['usemenulabels'] = 'Utiliser les noms de sommaire';
 $string['hideaccessbullets'] = 'Cacher les marques d\'accès';
 $string['configdefaultallowlinks'] = 'Générer les liens (défaut)';
 $string['configdefaultallowlinks_desc'] = 'Valeur par défaut s\'appliquant à toute nouvelle instance';
@@ -48,9 +48,18 @@ $string['configdefaulthidedisabledlinks'] = 'Cacher les liens inactifs (défaut)
 $string['configdefaulthidedisabledlinks_desc'] = 'Valeur par défaut s\'appliquant à toute nouvelle instance';
 $string['configdefaultdepth'] = 'Profondeur (défaut)';
 $string['configdefaultdepth_desc'] = 'Valeur par défaut s\'appliquant à toute nouvelle instance';
-$string['configdefaultusemenulabels'] = 'Utiliser les labels du menu paginé (défaut)';
+$string['configdefaultusemenulabels'] = 'Utiliser les noms de sommaire (défaut)';
+$string['configdefaultusemenulabels_help'] = 'Si cette option est active, les noms affichés dans le bloc sont les noms préparés pour les items de sommaire. Sinon, 
+ce sera le nom longs de la page';
 $string['configdefaultusemenulabels_desc'] = 'Valeur par défaut s\'appliquant à toute nouvelle instance';
 $string['configdefaulthideaccessbullets'] = 'Cacher les marques d\'accès (défaut)';
 $string['configdefaulthideaccessbullets_desc'] = 'Valeur par défaut s\'appliquant à toute nouvelle instance';
+$string['showanyway'] = 'Toujours montrer';
+
+$string['allowlinks_help'] = 'Les liens ne seront générés que sur des pages déjà vues si cette option est active, car les items
+pourraient être affichés à des utilisateurs qui n\'en ont pas le droit d\'accès.';
+
+$string['showanyway_help'] = 'Si activé, toutes les entrées de pages seront visibles dans le sommaire, que l\'utilisateur y ait accès ou non.
+Pour cette raison, l\'option "Génère des liens" est forcée à "Uniquement sur des pages déjà vues" ou "Non" si cette option est active.';
 
 

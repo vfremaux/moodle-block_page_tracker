@@ -31,6 +31,8 @@ defined('MOODLE_INTERNAL') || die();
 require_once($CFG->dirroot.'/blocks/page_tracker/locallib.php');
 require_once($CFG->dirroot.'/course/format/page/lib.php');
 
+use \format\page\course_page;
+
 class block_page_tracker extends block_list {
 
     protected $tracks;
@@ -42,6 +44,10 @@ class block_page_tracker extends block_list {
     public function specialization() {
         if (!empty($this->config) && !empty($this->config->title)) {
             $this->title = format_string($this->config->title);
+        }
+
+        if (!empty($this->config) && ($this->config->allowlinks == 2) && !empty($this->config->showanyway)) {
+            $this->config->allowlinks == 1;
         }
     }
 
@@ -58,11 +64,20 @@ class block_page_tracker extends block_list {
     }
 
     public function applicable_formats() {
-        return array('all' => false, 'course' => true);
+        return array('all' => false, 'course' => true, 'mod-*' => true);
     }
 
     public function get_content() {
+        global $COURSE;
+
         if ($this->content !== null) {
+            return $this->content;
+        }
+
+        if ($COURSE->format != 'page') {
+            $this->content = new stdClass;
+            $this->content->text = '';
+            $this->content->footer = '';
             return $this->content;
         }
 
@@ -190,9 +205,17 @@ class block_page_tracker extends block_list {
         }
 
         foreach ($pages as $page) {
-            if (!$page->is_visible(false)) {
-                if (!has_capability('format/page:editpages', $coursecontext)) {
-                    continue;
+
+            $displaymenu = $page->displaymenu;
+            if (empty($displaymenu)) {
+                continue;
+            }
+
+            if (empty($this->config->showanyway)) {
+                if (!$page->is_visible(false)) {
+                    if (!has_capability('format/page:editpages', $coursecontext)) {
+                        continue;
+                    }
                 }
             }
 
@@ -294,11 +317,20 @@ class block_page_tracker extends block_list {
 
         $children = $page->get_children();
         foreach ($children as &$child) {
-            if (!$child->is_visible(false)) {
-                if (!has_capability('format/page:editpages', $coursecontext)) {
-                    continue;
+
+            $displaymenu = $child->displaymenu;
+            if (empty($displaymenu)) {
+                continue;
+            }
+
+            if (empty($this->config->showanyway)) {
+                if (!$child->is_visible(false)) {
+                    if (!has_capability('format/page:editpages', $coursecontext)) {
+                        continue;
+                    }
                 }
             }
+
             $realvisible = $child->is_visible(false);
             $class = ($realvisible) ? '' : 'shadow ';
             $class .= ($current->id == $child->id) ? 'current' : '';

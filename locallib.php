@@ -34,8 +34,8 @@ function punch_track($courseid, $pageid, $userid) {
     if (!$track = $DB->get_record('block_page_tracker', $params)) {
         $track = new StdClass;
         $track->courseid = $courseid;
-        $track->userid = $userid;
         $track->pageid = $pageid;
+        $track->userid = $userid;
 
         $track->firsttimeviewed = time();
         $track->lasttimeviewed = time();

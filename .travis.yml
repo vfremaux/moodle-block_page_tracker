@@ -1,14 +1,16 @@
 language: php
 
-sudo: false
+sudo: true
 
 addons:
   firefox: "47.0.1"
-  postgresql: "9.3"
+  postgresql: "9.4"
   apt:
     packages:
-      - oracle-java8-installer
-      - oracle-java8-set-default
+      - openjdk-8-jre-headless
+
+services:
+  - mysql
 
 cache:
   directories:
@@ -16,65 +18,14 @@ cache:
     - $HOME/.npm
 
 php:
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
- - 5.6
-=======
->>>>>>> MOODLE_34_STABLE
-=======
- - 5.6
->>>>>>> MOODLE_34_STABLE
-=======
->>>>>>> MOODLE_34_STABLE
- - 7.0
- - 7.1
-
-env:
-<<<<<<< HEAD
- matrix:
-<<<<<<< HEAD
-<<<<<<< HEAD
-  - DB=mysqli MOODLE_BRANCH=MOODLE_32_STABLE
-  - DB=pgsql MOODLE_BRANCH=MOODLE_32_STABLE
-=======
-  - DB=mysqli MOODLE_BRANCH=MOODLE_33_STABLE
-  - DB=pgsql MOODLE_BRANCH=MOODLE_33_STABLE
->>>>>>> MOODLE_33_STABLE
-=======
-  - DB=mysqli MOODLE_BRANCH=MOODLE_34_STABLE
-  - DB=pgsql MOODLE_BRANCH=MOODLE_34_STABLE
->>>>>>> MOODLE_34_STABLE
-
-=======
-  global:
-    - MOODLE_BRANCH=MOODLE_34_STABLE
-  matrix:
-    - DB=mysqli
-    - DB=pgsql
->>>>>>> MOODLE_34_STABLE
-=======
- - 7.1
  - 7.2
 
 env:
-=======
- - 7.1
- - 7.2
-
-env:
->>>>>>> MOODLE_36_STABLE
   global:
-    - MOODLE_BRANCH=MOODLE_35_STABLE
+    - MOODLE_BRANCH=MOODLE_36_STABLE
   matrix:
-    - DB=mysqli
+    - DB=mariadb
     - DB=pgsql
-<<<<<<< HEAD
->>>>>>> MOODLE_35_STABLE
-=======
->>>>>>> MOODLE_36_STABLE
 
 before_install:
   - phpenv config-rm xdebug.ini
@@ -90,12 +41,13 @@ install:
 
 script:
   - moodle-plugin-ci phplint
-  - moodle-plugin-ci phpcpd
+#  - moodle-plugin-ci phpcpd
   - moodle-plugin-ci phpmd
   - moodle-plugin-ci codechecker
   - moodle-plugin-ci validate
   - moodle-plugin-ci savepoints
   - moodle-plugin-ci mustache
   - moodle-plugin-ci grunt
+#  - moodle-plugin-ci phpdoc
   - moodle-plugin-ci phpunit
 #  - moodle-plugin-ci behat

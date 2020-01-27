@@ -24,6 +24,10 @@
  */
 defined('MOODLE_INTERNAL') || die();
 
+require_once($CFG->dirroot.'/course/format/page/classes/page.class.php');
+
+use \format\page\course_page;
+
 class block_page_tracker_edit_form extends block_edit_form {
 
     protected function specific_definition($mform) {
@@ -44,9 +48,11 @@ class block_page_tracker_edit_form extends block_edit_form {
         $label = get_string('allowlinks', 'block_page_tracker');
         $mform->addElement('select', 'config_allowlinks', $label, $linkoptions, @$config->defaultallowlinks);
         $mform->setDefault('config_allowlinks', 1);
+        $mform->addHelpButton('config_allowlinks', 'allowlinks', 'block_page_tracker');
 
         $mform->addElement('checkbox', 'config_hidedisabledlinks', get_string('hidedisabledlinks', 'block_page_tracker'));
         $mform->setDefault('config_hidedisabledlinks', $config->defaulthidedisabledlinks);
+        $mform->setAdvanced('config_hidedisabledlinks');
 
         $pageoptions = array();
         $pageoptions['0'] = get_string('root', 'block_page_tracker');
@@ -68,9 +74,17 @@ class block_page_tracker_edit_form extends block_edit_form {
 
         $mform->addElement('advcheckbox', 'config_usemenulabels', get_string('usemenulabels', 'block_page_tracker'), '');
         $mform->setDefault('config_usemenulabels', $config->defaultusemenulabels);
+        $mform->addHelpButton('config_usemenulabels', 'usemenulabels', 'block_page_tracker');
+        $mform->setAdvanced('config_usemenulabels');
 
         $mform->addElement('advcheckbox', 'config_hideaccessbullets', get_string('hideaccessbullets', 'block_page_tracker'), '');
         $mform->setDefault('config_hideaccessbullets', $config->defaulthideaccessbullets);
+        $mform->setAdvanced('config_hideaccessbullets');
+
+        $mform->addElement('advcheckbox', 'config_showanyway', get_string('showanyway', 'block_page_tracker'), '');
+        $mform->setDefault('config_showanyway', 0);
+        $mform->disabledIf('config_showanyway', 'config_allowlinks', 'eq', 2);
+        $mform->addHelpButton('config_showanyway', 'showanyway', 'block_page_tracker');
     }
 
     public function set_data($defaults, &$files = null) {
