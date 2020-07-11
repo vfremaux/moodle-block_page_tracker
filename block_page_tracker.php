@@ -221,7 +221,7 @@ class block_page_tracker extends block_list {
 
             $realvisible = $page->is_visible(true);
             $class = ($realvisible) ? '' : 'shadow';
-            $class .= ($current->id == $page->id) ? 'current' : '';
+            $class .= ($current->id == $page->id) ? 'is-current-page' : '';
             $isenabled = $page->check_activity_lock();
             if ($page->accessed) {
                 if ($page->complete) {
@@ -333,7 +333,7 @@ class block_page_tracker extends block_list {
 
             $realvisible = $child->is_visible(false);
             $class = ($realvisible) ? '' : 'shadow ';
-            $class .= ($current->id == $child->id) ? 'current' : '';
+            $class .= ($current->id == $child->id) ? 'is-current-page' : '';
             $isenabled = $child->check_activity_lock();
             if (@$child->accessed) {
                 if ($child->complete) {

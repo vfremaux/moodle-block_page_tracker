@@ -1,18 +1,20 @@
 
+.block_page_tracker li,
+.block_page_tracker .unlist li {
+    padding: 0.4rem;
+}
+
 .block-pagetracker {
-    line-height: 20px;
+    line-height: 22px;
 }
 
-.block_page_tracker li {
-    margin-bottom: 6px !important;
-}
-
-.block-pagetracker.current {
-    line-height: 16px;
+.block-pagetracker.is-current-page {
+    color: #fff;
+    background-color: #aaa;
 }
 
 /* fix boost theme */
-.block-pagetracker.current::before {
+.block-pagetracker.is-current-page::before {
     border: none;
 }
 
@@ -188,8 +190,4 @@
         width: 85%;
     }
 
-    .block-pagetracker.current {
-        color: initial;
-        font-weight: bolder;
-    }
 }
