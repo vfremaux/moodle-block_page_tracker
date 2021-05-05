@@ -24,6 +24,10 @@
  */
 defined('MOODLE_INTERNAL') || die();
 
+require_once($CFG->dirroot.'/course/format/page/classes/page.class.php');
+
+use \format\page\course_page;
+
 class block_page_tracker_edit_form extends block_edit_form {
 
     protected function specific_definition($mform) {
@@ -38,15 +42,17 @@ class block_page_tracker_edit_form extends block_edit_form {
         $mform->addElement('text', 'config_title', get_string('configtitle', 'block_page_tracker'));
         $mform->setType('config_title', PARAM_MULTILANG);
 
-        $linkoptions['0'] = get_string('no');
-        $linkoptions['1'] = get_string('yesonvisited', 'block_page_tracker');
-        $linkoptions['2'] = get_string('yes');
+        $linkoptions[PAGE_TRACKER_NOLINKS] = get_string('no');
+        $linkoptions[PAGE_TRACKER_LINKSVISITED] = get_string('yesonvisited', 'block_page_tracker');
+        $linkoptions[PAGE_TRACKER_LINKS] = get_string('yes');
         $label = get_string('allowlinks', 'block_page_tracker');
         $mform->addElement('select', 'config_allowlinks', $label, $linkoptions, @$config->defaultallowlinks);
-        $mform->setDefault('config_allowlinks', 1);
+        $mform->setDefault('config_allowlinks', PAGE_TRACKER_LINKS);
+        $mform->addHelpButton('config_allowlinks', 'allowlinks', 'block_page_tracker');
 
-        $mform->addElement('checkbox', 'config_hidedisabledlinks', get_string('hidedisabledlinks', 'block_page_tracker'));
+        $mform->addElement('advcheckbox', 'config_hidedisabledlinks', get_string('hidedisabledlinks', 'block_page_tracker'));
         $mform->setDefault('config_hidedisabledlinks', $config->defaulthidedisabledlinks);
+        $mform->setAdvanced('config_hidedisabledlinks');
 
         $pageoptions = array();
         $pageoptions['0'] = get_string('root', 'block_page_tracker');
@@ -58,6 +64,7 @@ class block_page_tracker_edit_form extends block_edit_form {
             $pageoptions[$p->id] = format_string($p->nametwo);
         }
         $mform->addElement('select', 'config_startpage', get_string('startpage', 'block_page_tracker'), $pageoptions);
+        $mform->setDefault('config_startpage', isset($config->defaultstartpage) ? $config->defaultstartpage : 0);
 
         $leveloptions = array();
         $leveloptions['100'] = get_string('alllevels', 'block_page_tracker');
@@ -65,12 +72,24 @@ class block_page_tracker_edit_form extends block_edit_form {
             $leveloptions[$i] = $i;
         }
         $mform->addElement('select', 'config_depth', get_string('depth', 'block_page_tracker'), $leveloptions);
+        $mform->setDefault('config_depth', isset($config->defaultdepth) ? $config->defaultdepth : 100);
 
         $mform->addElement('advcheckbox', 'config_usemenulabels', get_string('usemenulabels', 'block_page_tracker'), '');
-        $mform->setDefault('config_usemenulabels', $config->defaultusemenulabels);
+        $mform->setDefault('config_usemenulabels', isset($config->defaultusemenulabels) ? $config->defaultusemenulabels : true);
+        $mform->addHelpButton('config_usemenulabels', 'usemenulabels', 'block_page_tracker');
+        $mform->setAdvanced('config_usemenulabels');
 
         $mform->addElement('advcheckbox', 'config_hideaccessbullets', get_string('hideaccessbullets', 'block_page_tracker'), '');
-        $mform->setDefault('config_hideaccessbullets', $config->defaulthideaccessbullets);
+        $mform->setDefault('config_hideaccessbullets', isset($config->defaulthideaccessbullets) ? $config->defaulthideaccessbullets : false);
+        $mform->setAdvanced('config_hideaccessbullets');
+
+        $mform->addElement('advcheckbox', 'config_showanyway', get_string('showanyway', 'block_page_tracker'), '');
+        $mform->setDefault('config_showanyway', 0);
+        $mform->disabledIf('config_showanyway', 'config_allowlinks', 'eq', PAGE_TRACKER_LINKS);
+        $mform->addHelpButton('config_showanyway', 'showanyway', 'block_page_tracker');
+
+        $mform->addElement('advcheckbox', 'config_initialexpanded', get_string('initiallyexpanded', 'block_page_tracker'), '');
+        $mform->setDefault('config_initialexpanded', 0);
     }
 
     public function set_data($defaults, &$files = null) {
