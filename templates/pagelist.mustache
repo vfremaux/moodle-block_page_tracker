@@ -1,0 +1,48 @@
+
+
+<!-- block_page_tracker/pagelist -->
+<ul class="page-level-{{level}} pagetracker-subs {{initialtoggleclass}}" data-parent="toggle-page-{{id}}">
+    {{#pages}}
+    <li class="page-node pagedepth{{level}}">
+
+        <div class="pagetracker-page d-inline-flex {{#showmarks}}justify-content-between{{/showmarks}} w-100">
+        {{#hassubs}}
+        <a id="toggle-page-{{id}}" data-blockid="{{blockid}}" data-courseid="{{courseid}}" aria-expanded="{{initialexpanded}}" role="button" class="pagetracker-toggle-handle">{{{initialicon}}}</a>
+        {{/hassubs}}
+        {{^hassubs}}
+        {{#pix}}spacer, block_page_tracker{{/pix}}
+        {{/hassubs}}
+
+        {{#showmarks}}
+        <div class="pagetracker-nameblock d-inline-flex justify-content-between w-100">
+        <div class="pagetracker-name">
+        {{#islink}}
+        <a href="{{{pageurl}}}" id="page-{{id}}" class="{{hasbeenseenclass}} {{iscurrentclass}}">{{{pagename}}}</a>
+        {{/islink}}
+        {{^islink}}
+        {{{pagename}}}
+        {{/islink}}
+        </div>
+        <div class="pagetracker-mark">
+        <img src="{{markurl}}" />
+        </div>
+        </div>
+        {{/showmarks}}
+
+        {{^showmarks}}
+        {{#islink}}
+        <a href="{{{pageurl}}}" id="page-{{id}}" class="{{hasbeenseenclass}}">{{{pagename}}}</a>
+        {{/islink}}
+        {{^islink}}
+        {{{pagename}}}
+        {{/islink}}
+        {{/showmarks}}
+        </div>
+
+        {{#hassubs}}
+        {{> block_page_tracker/pagelist }}
+        {{/hassubs}}
+    </li>
+    {{/pages}}
+</ul>
+<!-- /block_page_tracker/pagelist -->

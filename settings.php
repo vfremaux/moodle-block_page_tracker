@@ -47,6 +47,17 @@ $label = get_string('configdefaultdepth', 'block_page_tracker');
 $desc = get_string('configdefaultdepth_desc', 'block_page_tracker');
 $settings->add(new admin_setting_configselect($key, $label, $desc, 100, $leveloptions));
 
+$pageoptions = [];
+$pageoptions['0'] = get_string('root', 'block_page_tracker');
+$pageoptions['-1'] = get_string('self', 'block_page_tracker');
+$pageoptions['-2'] = get_string('parent', 'block_page_tracker');
+$pageoptions['-3'] = get_string('selfupper', 'block_page_tracker');
+
+$key = 'block_page_tracker/defaultstartpage';
+$label = get_string('configdefaultstartpage', 'block_page_tracker');
+$desc = get_string('configdefaultstartpage_desc', 'block_page_tracker');
+$settings->add(new admin_setting_configselect($key, $label, $desc, 0, $pageoptions));
+
 $key = 'block_page_tracker/defaultusemenulabels';
 $label = get_string('configdefaultusemenulabels', 'block_page_tracker');
 $desc = get_string('configdefaultusemenulabels_desc', 'block_page_tracker');

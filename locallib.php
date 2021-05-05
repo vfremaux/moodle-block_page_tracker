@@ -23,6 +23,10 @@
 
 defined('MOODLE_INTERNAL') || die;
 
+define('PAGE_TRACKER_NOLINKS', 0);
+define('PAGE_TRACKER_LINKSVISITED', 1);
+define('PAGE_TRACKER_LINKS', 2);
+
 function punch_track($courseid, $pageid, $userid) {
     global $DB;
 
@@ -34,8 +38,8 @@ function punch_track($courseid, $pageid, $userid) {
     if (!$track = $DB->get_record('block_page_tracker', $params)) {
         $track = new StdClass;
         $track->courseid = $courseid;
-        $track->userid = $userid;
         $track->pageid = $pageid;
+        $track->userid = $userid;
 
         $track->firsttimeviewed = time();
         $track->lasttimeviewed = time();
@@ -48,21 +52,18 @@ function punch_track($courseid, $pageid, $userid) {
     }
 }
 
-function block_page_tracker_debug_print_tree($pages) {
-    foreach ($pages as $p) {
-        echo "Page ".$p->id.' '.$p->nameone.'<br/>';
-        if (!empty($p->childs)) {
-            block_page_tracker_debug_print_tree_rec($p, '&ensp;&ensp;&ensp;');
+/**
+ * Forges a simplified template tree for debug display.
+ */
+function block_page_tracker_debug_print_tree($template) {
+    $simplified = new Stdclass;
+    $simplified->hassubs = $template->hassubs;
+    $simplified->pagename = $template->pagename;
+    if (!empty($template->pages)) {
+        foreach ($template->pages as $p) {
+            $simplified->pages[] = block_page_tracker_debug_print_tree($p);
         }
     }
-}
 
-function block_page_tracker_debug_print_tree_rec($page, $indent) {
-
-    foreach ($page->childs as $c) {
-        echo "{$indent}Page ".$c->id.' '.$c->nameone.'<br/>';
-        if (!empty($c->childs)) {
-            block_page_tracker_debug_print_tree_rec($c, $indent.'&ensp;&ensp;&ensp;');
-        }
-    }
+    return $simplified;
 }

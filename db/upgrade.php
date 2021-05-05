@@ -69,6 +69,14 @@ function xmldb_block_page_tracker_upgrade($oldversion = 0) {
         upgrade_block_savepoint(true, 2016101105, 'page_tracker');
     }
 
+    if ($oldversion < 2019091601) {
+
+        block_page_tracker_update_config();
+
+        // Page_module savepoint reached.
+        upgrade_block_savepoint(true, 2019091601, 'page_tracker');
+    }
+
     return $result;
 }
 
@@ -134,5 +142,47 @@ function catch_tracks($verbose = false) {
             }
             $rs->close();
         }
+    }
+}
+
+function block_page_tracker_update_config() {
+    global $DB;
+
+    $instances = $DB->get_records('block_instances', ['blockname' => 'page_tracker']);
+
+    if ($instances) {
+
+        $a = new stdClass();
+        $a->total = count($instances);
+        $a->done = 0;
+
+        $pbar = new progress_bar('upgradepagetrackerconfig', 500, true);
+
+        foreach ($instances as $instance) {
+            $config = unserialize(base64_decode($instance->configdata));
+
+            if (!isset($config)) {
+                $config = new StdClass;
+            }
+
+            if (!isset($config->hidedisabledlinks)) {
+                $config->hidedisabledlinks = 0;
+            }
+
+            if (!isset($config->showanyway)) {
+                $config->showanyway = 0;
+            }
+
+            if (!isset($config->initialexpanded)) {
+                $config->initialexpanded = 0;
+            }
+
+            $configdata = base64_encode(serialize($config));
+
+            $DB->set_field('block_instances', 'configdata', $configdata, ['id' => $instance->id]);
+            $a->done++;
+            $pbar->update($a->done, $a->total, get_string('upgradepagetrackerconfig', 'block_page_tracker', $a));
+        }
+
     }
 }
