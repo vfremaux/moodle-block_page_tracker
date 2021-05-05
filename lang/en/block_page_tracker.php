@@ -22,8 +22,12 @@
  * @package block_page_tracker
  */
 
+// Capabilities.
 $string['page_tracker:addinstance'] = 'Can add an instance';
 $string['page_tracker:accessallpages'] = 'Can access all pages';
+
+// Privacy.
+$string['privacy:metadata'] = 'The Page Tracker block does not store any personal data about any user.';
 
 $string['alllevels'] = 'All levels';
 $string['allowlinks'] = 'Allow links generation';
@@ -37,6 +41,7 @@ $string['root'] = 'Course root';
 $string['self'] = '-- The current page';
 $string['selfupper'] = '-- Upper nav and current tree';
 $string['parent'] = '-- The parent page';
+$string['initiallyexpanded'] = 'Nodes initially expanded';
 $string['startpage'] = 'Start page';
 $string['yesonvisited'] = 'Only on visited pages';
 $string['hidedisabledlinks'] = 'Hide disabled links';
@@ -48,8 +53,15 @@ $string['configdefaulthidedisabledlinks'] = 'Default for hiding disabled links';
 $string['configdefaulthidedisabledlinks_desc'] = 'Default value for hiding disabled links that applies to any new instance';
 $string['configdefaultdepth'] = 'Default for depth';
 $string['configdefaultdepth_desc'] = 'Default value for depth that applies to any new instance';
+$string['configdefaultstartpage'] = 'Start page default (generic)';
+$string['configdefaultstartpage_desc'] = 'Generic location for start page';
 $string['configdefaultusemenulabels'] = 'Default for menu labels';
+$string['usemenulabels_help'] = 'If disabled, plain page name will be used for display';
 $string['configdefaultusemenulabels_desc'] = 'Default value for menu labels that applies to any new instance';
 $string['configdefaulthideaccessbullets'] = 'Default for hiding bullets';
 $string['configdefaulthideaccessbullets_desc'] = 'Default value for hiding bullets that applies to any new instance';
-
+$string['showanyway'] = 'Show anyway';
+$string['allowlinks_help'] = 'Links will never be generated on unvisited pages when the Show anyway option is enabled.';
+$string['showanyway_help'] = 'If checked, all the pages will be shown in the block, wether the use can access them or not. For this reason,
+the allowlinks options will be forced to the "Only on visited pages" value if it il fully open.';
+$string['upgradepagetrackerconfig'] = 'Upgrade page_tracker config data';
