@@ -31,8 +31,8 @@ $plugin->requires  = 2020060900;        // Requires this Moodle version.
 $plugin->component = 'block_page_tracker'; // Full name of the plugin (used for diagnostics).
 $plugin->release = '3.9.0 (Build 2021120200)';
 $plugin->maturity = MATURITY_STABLE;
-$plugin->supported = [39,311];
 $plugin->dependencies = array('format_page' => 2019091601);
+$plugin->supported = [39,311];
 
 // Non moodle attributes.
 $plugin->codeincrement = '3.9.0005';

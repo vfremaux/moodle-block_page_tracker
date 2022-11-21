@@ -293,7 +293,9 @@ class block_page_tracker extends block_base {
                 if (empty($this->config->showanyway)) {
                     if (!$child->is_visible(false) || !$child->is_available()) {
                         if (!has_capability('format/page:editpages', $coursecontext)) {
-                            debug_trace("Hide page as not visible and no override editing cap", TRACE_DEBUG);
+                            if (function_exists('debug_trace')) {
+	                            debug_trace("Hide page as not visible and no override editing cap", TRACE_DEBUG);
+	                        }
                             continue;
                         }
                     }
