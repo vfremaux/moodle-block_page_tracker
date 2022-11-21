@@ -62,6 +62,5 @@ $string['configdefaulthideaccessbullets'] = 'Default for hiding bullets';
 $string['configdefaulthideaccessbullets_desc'] = 'Default value for hiding bullets that applies to any new instance';
 $string['showanyway'] = 'Show anyway';
 $string['allowlinks_help'] = 'Links will never be generated on unvisited pages when the Show anyway option is enabled.';
-$string['showanyway_help'] = 'If checked, all the pages will be shown in the block, wether the use can access them or not. For this reason,
-the allowlinks options will be forced to the "Only on visited pages" value if it il fully open.';
+$string['showanyway_help'] = 'If checked, all the pages will be shown in the block, wether the use can access them or not.';
 $string['upgradepagetrackerconfig'] = 'Upgrade page_tracker config data';

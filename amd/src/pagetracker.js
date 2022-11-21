@@ -26,7 +26,9 @@ define(['jquery', 'core/log', 'core/config'], function($, log, cfg) {
             log.debug("AMD Page Tracker Initialized");
         },
 
-        toggle: function() {
+        toggle: function(e) {
+
+            e.stopPropagation();
 
             var that = $(this);
             var url = cfg.wwwroot + '/blocks/page_tracker/ajax/service.php';
@@ -37,7 +39,7 @@ define(['jquery', 'core/log', 'core/config'], function($, log, cfg) {
             url += '&blockid=' + blockid;
             url += '&itemid=' + itemid;
 
-            log.debug("AMD Page Tracker : Got fo " + that.attr('id'));
+            log.debug("AMD Page Tracker : Got for " + that.attr('id'));
             var subnodes = $('ul[data-parent="' + that.attr('id') + '"]');
             if (subnodes.hasClass('collapsed')) {
                 $('#' + that.attr('id') + ' i').removeClass('fa-plus');

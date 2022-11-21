@@ -53,13 +53,14 @@ class block_page_tracker extends block_base {
     public function init() {
         global $OUTPUT;
 
-        $this->title = get_string('blockname', 'block_page_tracker');
+        // $this->title = get_string('blockname', 'block_page_tracker');
+        $this->title = '';
 
         if (is_null(self::$ticks)) {
             $ticks = new StdClass();
-            $ticks->image = $OUTPUT->image_url('tick_green_big', 'block_page_tracker');
-            $ticks->imagepartial = $OUTPUT->image_url('tick_green_big_partial', 'block_page_tracker');
-            $ticks->imageempty = $OUTPUT->image_url('tick_green_big_empty', 'block_page_tracker');
+            $ticks->image = $OUTPUT->image_url('bullet_visited', 'block_page_tracker');
+            $ticks->imagepartial = $OUTPUT->image_url('bullet_half-visited', 'block_page_tracker');
+            $ticks->imageempty = $OUTPUT->image_url('bullet', 'block_page_tracker');
             self::$ticks = $ticks;
         }
     }
@@ -124,7 +125,7 @@ class block_page_tracker extends block_base {
         $template->level = 0;
         $template->blockid = $this->instance->id;
         $template->courseid = $COURSE->id;
-        $template->showmarks = !$this->config->hideaccessbullets;
+        $template->showmarks = empty($this->config->hideaccessbullets);
 
         $this->content->text = $OUTPUT->render_from_template('block_page_tracker/pagelist', $template);
         $this->content->footer = '';
@@ -201,11 +202,9 @@ class block_page_tracker extends block_base {
                 $flat[$current->parent]->childs = array($current->id => $current);
             }
             $flat[$current->id] = $current;
-
-            // block_page_tracker_debug_print_tree($pages);
         } else {
             // Take all pages from absolute root.
-            $pages = course_page::get_all_pages($courseid, 'nested');
+            $pages = course_page::get_all_pages($courseid, 'nested', false, 0, $this->config->depth);
         }
 
         $this->current = course_page::get_current_page($courseid);
@@ -236,7 +235,7 @@ class block_page_tracker extends block_base {
 
         // Pre scans page for completion compilation.
         foreach ($pages as $pid => $page) {
-            if (!empty($this->tracks) && in_array($pid, $this->tracks)) {
+            if (!empty($this->tracks) && in_array($pid, $this->tracks) || ($page->id == $this->current->id)) {
                 $pages[$pid]->accessed = 1;
             } else {
                 $pages[$pid]->accessed = 0;
@@ -256,7 +255,6 @@ class block_page_tracker extends block_base {
         $template = $this->get_sub_stations($toppage);
         $template->initialtoggleclass = ''; // Top level must be never collapsed.
 
-        // debug_trace(block_page_tracker_debug_print_tree($template));
         return $template;
     }
 
@@ -283,37 +281,38 @@ class block_page_tracker extends block_base {
         if (!empty($children)) {
             foreach ($children as $child) {
 
-                debug_trace(" => Child $child->id ", TRACE_DEBUG_FINE);
+                if ($debug) {
+                    debug_trace(" => Child $child->id ", TRACE_DEBUG_FINE);
+                }
 
                 $displaymenu = $child->displaymenu;
                 if (empty($displaymenu)) {
-                    debug_trace(" => Child {$child->id} not displayed by page setting ", TRACE_DEBUG_FINE);
                     continue;
                 }
 
                 if (empty($this->config->showanyway)) {
-                    if (!$child->is_visible(false)) {
+                    if (!$child->is_visible(false) || !$child->is_available()) {
                         if (!has_capability('format/page:editpages', $coursecontext)) {
-                            debug_trace(" => Child {$child->id} not visible ", TRACE_DEBUG_FINE);
+                            debug_trace("Hide page as not visible and no override editing cap", TRACE_DEBUG);
                             continue;
                         }
                     }
                 }
 
-                $template->hassubs = true; // At least first visible child must trigger.
+                $template->hassubs = true && ($this->reldepth > 0); // At least first visible child must trigger.
                 $childtpl = $this->export_page_template($child);
 
                 if ($this->is_visible($child)) {
-                    $this->reldepth--;
                     // $childtpl->subs = null;
                     if ($this->reldepth > 0) {
+                        $this->reldepth--;
                         $template->pages[] = $this->get_sub_stations($child);
+                        $this->reldepth++;
                     }
-                    $this->reldepth++;
+                    $template->hassubs = true && ($this->reldepth > 0); // At least first visible child must trigger.
                 } else {
                     $childtpl->hassubs = false;
                     // $childtpl->subs = null;
-                    debug_trace(" => Child link not visible page tracker config  ", TRACE_DEBUG_FINE);
                 }
             }
         }
@@ -329,9 +328,9 @@ class block_page_tracker extends block_base {
         $pagetpl = new Stdclass;
         $pagetpl->id = $page->id;
 
-        $realvisible = $page->is_visible(true);
-        $pagetpl->class = ($realvisible) ? '' : 'shadow';
-        $pagetpl->class .= ($this->current->id == $page->id) ? 'is-current-page' : '';
+        $realvisible = $page->is_visible_page();
+        $pagetpl->iscurrentclass = ($realvisible) ? '' : 'is-hidden-page';
+        $pagetpl->iscurrentclass .= ($this->current->id == $page->id) ? 'is-current-page' : '';
         $isenabled = $page->check_activity_lock();
 
         $pagetpl->parent = $page->get_parent(true);
@@ -358,8 +357,10 @@ class block_page_tracker extends block_base {
 
         if (empty($this->config->hideaccessbullets)) {
             if ($page->accessed) {
+                $pagetpl->hasbeenseenclass = 'has-been-seen';
                 if ($page->complete) {
                     $pagetpl->markurl = self::$ticks->image;
+                    $pagetpl->hasbeenseenclass = 'has-been-seen full';
                 } else {
                     $pagetpl->markurl = self::$ticks->imagepartial;
                 }
@@ -416,16 +417,24 @@ class block_page_tracker extends block_base {
         return $complete;
     }
 
+    /**
+     * Checks if the page entry needs a link.
+     * @param object $page the course_page object
+     */
     protected function is_link($page) {
+        global $USER, $COURSE;
+
+        $context = context_course::instance($COURSE->id);
+        $isenrolled = is_enrolled($context, $USER);
 
         switch ($this->config->allowlinks) {
             case PAGE_TRACKER_LINKS: {
-                return true;
+                return $page->check_activity_lock();
             }
 
             case PAGE_TRACKER_LINKSVISITED: {
-                if ($page->accessed) {
-                    return true;
+                if ($page->accessed && ($isenrolled || has_capability('moodle/course:viewhiddenactivities', $context))) {
+                    return $page->check_activity_lock();
                 }
             }
 
@@ -433,11 +442,15 @@ class block_page_tracker extends block_base {
                 return false;
             }
         }
+
+        return false;
+
     }
 
     protected function is_visible($child) {
         return empty($this->config->hidedisabledlinks) ||
                 $child->accessed ||
+                    ($this->current->id == $child->id) ||
                         $this->config->allowlinks != PAGE_TRACKER_LINKSVISITED ||
                                 has_capability('block/page_tracker:accessallpages', $this->context);
     }

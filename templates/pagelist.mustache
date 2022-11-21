@@ -5,7 +5,7 @@
     {{#pages}}
     <li class="page-node pagedepth{{level}}">
 
-        <div class="pagetracker-page d-inline-flex {{#showmarks}}justify-content-between{{/showmarks}} w-100">
+        <div class="pagetracker-page d-inline-flex {{#showmarks}}justify-content-between{{/showmarks}} w-100 {{iscurrentclass}}">
         {{#hassubs}}
         <a id="toggle-page-{{id}}" data-blockid="{{blockid}}" data-courseid="{{courseid}}" aria-expanded="{{initialexpanded}}" role="button" class="pagetracker-toggle-handle">{{{initialicon}}}</a>
         {{/hassubs}}
@@ -17,7 +17,7 @@
         <div class="pagetracker-nameblock d-inline-flex justify-content-between w-100">
         <div class="pagetracker-name">
         {{#islink}}
-        <a href="{{{pageurl}}}" id="page-{{id}}" class="{{hasbeenseenclass}} {{iscurrentclass}}">{{{pagename}}}</a>
+        <a href="{{{pageurl}}}" id="page-{{id}}" class="{{isvisibleclass}} {{hasbeenseenclass}} {{iscurrentclass}}">{{{pagename}}}</a>
         {{/islink}}
         {{^islink}}
         {{{pagename}}}
@@ -31,7 +31,7 @@
 
         {{^showmarks}}
         {{#islink}}
-        <a href="{{{pageurl}}}" id="page-{{id}}" class="{{hasbeenseenclass}}">{{{pagename}}}</a>
+        <a href="{{{pageurl}}}" id="page-{{id}}" class="{{isvisibleclass}} {{hasbeenseenclass}} {{iscurrentclass}}">{{{pagename}}}</a>
         {{/islink}}
         {{^islink}}
         {{{pagename}}}

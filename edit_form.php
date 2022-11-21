@@ -85,11 +85,12 @@ class block_page_tracker_edit_form extends block_edit_form {
 
         $mform->addElement('advcheckbox', 'config_showanyway', get_string('showanyway', 'block_page_tracker'), '');
         $mform->setDefault('config_showanyway', 0);
-        $mform->disabledIf('config_showanyway', 'config_allowlinks', 'eq', PAGE_TRACKER_LINKS);
         $mform->addHelpButton('config_showanyway', 'showanyway', 'block_page_tracker');
+        $mform->setAdvanced('config_showanyway');
 
         $mform->addElement('advcheckbox', 'config_initialexpanded', get_string('initiallyexpanded', 'block_page_tracker'), '');
         $mform->setDefault('config_initialexpanded', 0);
+        $mform->setAdvanced('config_initialexpanded');
     }
 
     public function set_data($defaults, &$files = null) {
