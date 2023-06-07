@@ -80,6 +80,10 @@ function xmldb_block_page_tracker_upgrade($oldversion = 0) {
     return $result;
 }
 
+/**
+ * Explore logs and catch marks to recover all visits on pages.
+ * @param bool $verbose
+ */
 function catch_tracks($verbose = false) {
     global $DB;
 
@@ -161,7 +165,7 @@ function block_page_tracker_update_config() {
         foreach ($instances as $instance) {
             $config = unserialize(base64_decode($instance->configdata));
 
-            if (!isset($config)) {
+            if (!isset($config) || !is_object($config)) {
                 $config = new StdClass;
             }
 

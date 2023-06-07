@@ -62,8 +62,7 @@ $string['showanyway'] = 'Toujours montrer';
 $string['allowlinks_help'] = 'Les liens ne seront générés que sur des pages déjà vues si cette option est active, car les items
 pourraient être affichés à des utilisateurs qui n\'en ont pas le droit d\'accès.';
 
-$string['showanyway_help'] = 'Si activé, toutes les entrées de pages seront visibles dans le sommaire, que l\'utilisateur y ait accès ou non.
-Pour cette raison, l\'option "Génère des liens" est forcée à "Uniquement sur des pages déjà vues" ou "Non" si cette option est active.';
+$string['showanyway_help'] = 'Si activé, toutes les entrées de pages seront visibles dans le sommaire, que l\'utilisateur y ait accès ou non.';
 
 $string['upgradepagetrackerconfig'] = 'Mise à niveau des configurations des Sommaires de cours';
 
