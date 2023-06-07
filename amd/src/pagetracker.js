@@ -29,6 +29,7 @@ define(['jquery', 'core/log', 'core/config'], function($, log, cfg) {
         toggle: function(e) {
 
             e.stopPropagation();
+            e.preventDefault();
 
             var that = $(this);
             var url = cfg.wwwroot + '/blocks/page_tracker/ajax/service.php';

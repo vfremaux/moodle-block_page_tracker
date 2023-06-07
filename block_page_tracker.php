@@ -96,7 +96,7 @@ class block_page_tracker extends block_base {
     }
 
     public function applicable_formats() {
-        return array('all' => false, 'course' => true, 'mod-*' => true);
+        return array('all' => false, 'course-view-page' => true, 'mod-*' => true);
     }
 
     public function get_content() {
@@ -209,6 +209,8 @@ class block_page_tracker extends block_base {
 
         $this->current = course_page::get_current_page($courseid);
 
+        // TODO : Reconsider this... !!!!
+        /*
         if (!empty($startpage)) {
             $tmp = $startpage;
             // Remove childs to only have this page.
@@ -223,6 +225,7 @@ class block_page_tracker extends block_base {
                 }
             }
         }
+        */
 
         if (empty($pages)) {
             // Return empty template.
@@ -230,7 +233,6 @@ class block_page_tracker extends block_base {
         }
 
         // TODO : if in my learning paths check completion for tick display.
-
         $this->get_tracks();
 
         // Pre scans page for completion compilation.
@@ -294,7 +296,7 @@ class block_page_tracker extends block_base {
                     if (!$child->is_visible(false) || !$child->is_available()) {
                         if (!has_capability('format/page:editpages', $coursecontext)) {
                             if (function_exists('debug_trace')) {
-	                            debug_trace("Hide page as not visible and no override editing cap", TRACE_DEBUG);
+	                            debug_trace("Hide page as not visible and no override editing cap", TRACE_DEBUG_FINE);
 	                        }
                             continue;
                         }
