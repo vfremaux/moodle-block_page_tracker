@@ -15,9 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * Plugin internal library
+ *
  * @package    block_page_tracker
- * @category   blocks
- * @copyright  2003 onwards Valery Fremaux (valery.fremaux@gmail.com)
+ * @author     Valery Fremaux (valery.fremaux@gmail.com)
+ * @copyright  2016 onwards Valery Fremaux (valery.fremaux@gmail.com)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -27,6 +29,12 @@ define('PAGE_TRACKER_NOLINKS', 0);
 define('PAGE_TRACKER_LINKSVISITED', 1);
 define('PAGE_TRACKER_LINKS', 2);
 
+/**
+ * Marks the page track
+ * @param int $courseid
+ * @param int $pageid
+ * @param int $userid
+ */
 function punch_track($courseid, $pageid, $userid) {
     global $DB;
 
@@ -34,7 +42,7 @@ function punch_track($courseid, $pageid, $userid) {
         return;
     }
 
-    $params = array('courseid' => $courseid, 'pageid' => $pageid, 'userid' => $userid);
+    $params = ['courseid' => $courseid, 'pageid' => $pageid, 'userid' => $userid];
     if (!$track = $DB->get_record('block_page_tracker', $params)) {
         $track = new StdClass;
         $track->courseid = $courseid;
@@ -54,6 +62,7 @@ function punch_track($courseid, $pageid, $userid) {
 
 /**
  * Forges a simplified template tree for debug display.
+ * @param string $template
  */
 function block_page_tracker_debug_print_tree($template) {
     $simplified = new Stdclass;

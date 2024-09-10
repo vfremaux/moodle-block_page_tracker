@@ -15,17 +15,19 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * Block main library
+ *
  * @package    block_page_tracker
- * @category   blocks
- * @copyright  2003 onwards Valery Fremaux (valery.fremaux@gmail.com)
+ * @author          Valery Fremaux (valery.fremaux@gmail.com)
+ * @copyright       2016 onwards Valery Fremaux (valery.fremaux@gmail.com)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-defined('MOODLE_INTERNAL') || die;
 
 /**
  * This function is not implemented in this plugin, but is needed to mark
  * the vf documentation custom volume availability.
+ * @param string $feature checks availability of a feature
+ * @param bool $getsupported if true returns the list of supported features
  */
 function block_page_tracker_supports_feature($feature = null, $getsupported = false) {
     if ($getsupported) {

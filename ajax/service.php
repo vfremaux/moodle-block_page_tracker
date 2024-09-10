@@ -15,6 +15,8 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * A general Ajax receiver
+ *
  * @package     block_page_tracker
  * @copyright   2008 onwards Valery Fremaux <http://docs.activeprolearn.com/en>
  * @author      Valery Fremaux <valery.fremaux@gmail.com>
@@ -28,12 +30,12 @@ $itemid = required_param('itemid', PARAM_INT); // the page id.
 $blockid = required_param('blockid', PARAM_INT);
 $action = required_param('what', PARAM_ALPHA);
 
-if (!$DB->get_record('block_instances', array('id' => $blockid))) {
-    print_error('badsectionid');
+if (!$DB->get_record('block_instances', ['id' => $blockid])) {
+    throw new moodle_exception('badsectionid');
 }
 
-if (!$course = $DB->get_record('course', array('id' => $id))) {
-    print_error('coursemisconf');
+if (!$course = $DB->get_record('course', ['id' => $id])) {
+    throw new moodle_exception('coursemisconf');
 }
 
 require_login($course);

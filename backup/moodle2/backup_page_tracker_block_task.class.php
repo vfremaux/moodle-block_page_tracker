@@ -15,8 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * Block backup tasks
+ *
  * @package         block_page_tracker
  * @subpackage      backup-moodle2
+ * @author          Valery Fremaux (valery.fremaux@gmail.com)
  * @copyright       2016 onwards Valery Fremaux (valery.fremaux@gmail.com)
  * @license         http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -27,29 +30,41 @@ require_once($CFG->dirroot.'/blocks/page_tracker/backup/moodle2/backup_page_trac
 /**
  * Specialised backup task for the html block
  * (requires encode_content_links in some configdata attrs)
- *
- * TODO: Finish phpdocs
  */
 class backup_page_tracker_block_task extends backup_block_task {
 
+    /**
+     * Settings definition
+     */
     protected function define_my_settings() {
     }
 
+    /**
+     * Steps definition
+     */
     protected function define_my_steps() {
         // Block page_tracker has one structure step.
         $this->add_step(new backup_page_tracker_block_structure_step('page_tracker_structure', 'page_tracker.xml'));
     }
 
+    /**
+     * Associated fileareas
+     */
     public function get_fileareas() {
-        return array();
+        return [];
     }
 
+    /**
+     * Encode block configutation
+     */
     public function get_configdata_encoded_attributes() {
-        return array(); // We need to encode some attrs in configdata.
+        return []; // We need to encode some attrs in configdata.
     }
 
+    /**
+     * Encode embedded links
+     */
     static public function encode_content_links($content) {
         return $content; // No special encoding of links.
     }
 }
-

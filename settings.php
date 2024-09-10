@@ -15,8 +15,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * Block global settings
+ *
  * @package   block_page_tracker
- * @category  blocks
  * @copyright 2012 Valery Fremaux
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -37,7 +38,7 @@ $label = get_string('configdefaulthidedisabledlinks', 'block_page_tracker');
 $desc = get_string('configdefaulthidedisabledlinks_desc', 'block_page_tracker');
 $settings->add(new admin_setting_configcheckbox($key, $label, $desc, true));
 
-$leveloptions = array();
+$leveloptions = [];
 $leveloptions['100'] = get_string('alllevels', 'block_page_tracker');
 for ($i = 1; $i <= 3; $i++) {
     $leveloptions[$i] = $i;

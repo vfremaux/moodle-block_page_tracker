@@ -18,21 +18,20 @@
  * Version details.
  *
  * @package     block_page_tracker
- * @category    blocks
  * @author      Valery Fremaux <valery.fremaux@gmail.com>
- * @copyright   2010 onwards Valery Fremaux (http://www.mylearningfactory.com)
+ * @copyright   2010 onwards Valery Fremaux (http://www.activeprolearn.com)
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->version   = 2021120200;        // The current plugin version (Date: YYYYMMDDXX).
-$plugin->requires  = 2020060900;        // Requires this Moodle version.
+$plugin->requires  = 2022112801;        // Requires this Moodle version.
 $plugin->component = 'block_page_tracker'; // Full name of the plugin (used for diagnostics).
-$plugin->release = '3.9.0 (Build 2021120200)';
+$plugin->release = '4.1.0 (Build 2021120200)';
 $plugin->maturity = MATURITY_STABLE;
-$plugin->dependencies = array('format_page' => 2019091601);
-$plugin->supported = [39,311];
+$plugin->dependencies = ['format_page' => 2019091601];
+$plugin->supported = [401, 402];
 
 // Non moodle attributes.
-$plugin->codeincrement = '3.9.0005';
+$plugin->codeincrement = '4.1.0005';

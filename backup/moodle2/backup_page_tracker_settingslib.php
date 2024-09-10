@@ -15,9 +15,12 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * @package     block
- * @subpackage  block_page_tracker
- * @copyright   2015 onwards Valery Fremaux {valery.fremaux@gmail.com}
+ * Backup settings
+ *
+ * @package  block_page_tracker
+ * @subpackage      backup-moodle2
+ * @author          Valery Fremaux (valery.fremaux@gmail.com)
+ * @copyright       2016 onwards Valery Fremaux (valery.fremaux@gmail.com)
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 defined('MOODLE_INTERNAL') || die;

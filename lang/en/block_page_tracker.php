@@ -17,8 +17,8 @@
 /**
  * Block Page Tracker Language File
  *
- * @author Valery Fremaux
- * @version $Id: block_page_tracker.php,v 1.4 2012-02-16 19:53:55 vf Exp $
+ * @author          Valery Fremaux (valery.fremaux@gmail.com)
+ * @copyright       2016 onwards Valery Fremaux (valery.fremaux@gmail.com)
  * @package block_page_tracker
  */
 

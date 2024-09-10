@@ -15,12 +15,15 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * Plugin standard upgrade
+ *
  * @package    block_page_tracker
- * @category   blocks
- * @copyright  2003 onwards Valery Fremaux (valery.fremaux@gmail.com)
+ * @author          Valery Fremaux (valery.fremaux@gmail.com)
+ * @copyright       2016 onwards Valery Fremaux (valery.fremaux@gmail.com)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 defined('MOODLE_INTERNAL') || die();
+
 require_once($CFG->dirroot.'/blocks/page_tracker/locallib.php');
 
 function xmldb_block_page_tracker_upgrade($oldversion = 0) {
@@ -51,10 +54,10 @@ function xmldb_block_page_tracker_upgrade($oldversion = 0) {
         $table->add_field('views', XMLDB_TYPE_INTEGER, '4', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '0');
 
         // Adding keys to table.
-        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
 
         // Adding indexes to table.
-        $table->add_index('ix_unique', XMLDB_INDEX_UNIQUE, array('courseid', 'pageid', 'userid'));
+        $table->add_index('ix_unique', XMLDB_INDEX_UNIQUE, ['courseid', 'pageid', 'userid']);
 
         // Conditionally launch create table.
         if (!$dbman->table_exists($table)) {
@@ -80,10 +83,6 @@ function xmldb_block_page_tracker_upgrade($oldversion = 0) {
     return $result;
 }
 
-/**
- * Explore logs and catch marks to recover all visits on pages.
- * @param bool $verbose
- */
 function catch_tracks($verbose = false) {
     global $DB;
 
@@ -94,7 +93,7 @@ function catch_tracks($verbose = false) {
     if ($reader instanceof \logstore_standard\log\store) {
         $courseparm = 'courseid';
         $fields = 'CONCAT('.$courseparm.', \':\', objectid, \':\', userid) as trackid';
-        $params = array('component' => 'format_page' , 'action' => 'viewed');
+        $params = ['component' => 'format_page' , 'action' => 'viewed'];
         $count = $DB->count_records('logstore_standard_log', $params);
         $counter = 0;
         $donemem = 0;
@@ -122,7 +121,7 @@ function catch_tracks($verbose = false) {
     } else if ($reader instanceof \logstore_legacy\log\store) {
         $courseparm = 'course';
         $fields = 'CONCAT(info, \':\', userid) as trackid';
-        $params = array('action' => 'viewpage');
+        $params = ['action' => 'viewpage'];
         $count = $DB->count_records('log', $params);
         $counter = 0;
         if ($verbose) {
@@ -149,6 +148,9 @@ function catch_tracks($verbose = false) {
     }
 }
 
+/**
+ * Update block instances configs
+ */
 function block_page_tracker_update_config() {
     global $DB;
 
@@ -187,6 +189,5 @@ function block_page_tracker_update_config() {
             $a->done++;
             $pbar->update($a->done, $a->total, get_string('upgradepagetrackerconfig', 'block_page_tracker', $a));
         }
-
     }
 }

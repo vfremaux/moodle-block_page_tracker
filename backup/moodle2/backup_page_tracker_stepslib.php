@@ -15,30 +15,30 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * Backup steps
+ *
  * @package block_page_tracker
- * @category blocks
  * @subpackage backup-moodle2
- * @copyright 2016 onwards Valery Fremaux (valery.fremaux@gmail.com)
+ * @author          Valery Fremaux (valery.fremaux@gmail.com)
+ * @copyright       2016 onwards Valery Fremaux (valery.fremaux@gmail.com)
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-defined('MOODLE_INTERNAL') || die;
 
 /**
- * Define all the backup steps that wll be used by the backup_page_tracker_block_task
- */
-
-/**
- * Define the complete page_tracker tracks structure.
+ * Define the complete page_tracker backup steps structure.
  */
 class backup_page_tracker_block_structure_step extends backup_block_structure_step {
 
+    /**
+     * XML structure définition
+     */
     protected function define_structure() {
         global $DB;
 
         // TODO : check how to get userinfo information.
 
         // Get the block.
-        $block = $DB->get_record('block_instances', array('id' => $this->task->get_blockid()));
+        $block = $DB->get_record('block_instances', ['id' => $this->task->get_blockid()]);
 
         // Extract configdata.
         $config = unserialize(base64_decode($block->configdata));
@@ -46,8 +46,8 @@ class backup_page_tracker_block_structure_step extends backup_block_structure_st
         // Define each element separated.
 
         $tracks = new backup_nested_element('tracks');
-        $track = new backup_nested_element('track', array('id'), array('courseid', 'pageid', 'userid', 'firsttimeviewed',
-                                          'lasttimeviewed', 'views'));
+        $track = new backup_nested_element('track', ['id'], ['courseid', 'pageid', 'userid', 'firsttimeviewed',
+                                          'lasttimeviewed', 'views']);
 
         // Build the tree.
 
@@ -56,7 +56,7 @@ class backup_page_tracker_block_structure_step extends backup_block_structure_st
         // Define sources.
 
         // TODO : check if user info is required or not.
-        $track->set_source_table('block_page_tracker', array('courseid' => backup::VAR_COURSEID));
+        $track->set_source_table('block_page_tracker', ['courseid' => backup::VAR_COURSEID]);
 
         // ID Annotations (none).
         $track->annotate_ids('user', 'userid');
