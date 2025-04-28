@@ -17,9 +17,10 @@
 /**
  * Block Page Tracker Language File
  *
- * @author          Valery Fremaux (valery.fremaux@gmail.com)
- * @copyright       2016 onwards Valery Fremaux (valery.fremaux@gmail.com)
- * @package block_page_tracker
+ * @package    block_page_tracker
+ * @author     Valery Fremaux (valery.fremaux@gmail.com)
+ * @copyright  2016 onwards Valery Fremaux (valery.fremaux@gmail.com)
+ * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 $string['page_tracker:addinstance'] = 'Peut ajouter une instance';

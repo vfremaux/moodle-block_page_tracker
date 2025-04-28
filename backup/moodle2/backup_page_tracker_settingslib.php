@@ -18,7 +18,6 @@
  * Backup settings
  *
  * @package  block_page_tracker
- * @subpackage      backup-moodle2
  * @author          Valery Fremaux (valery.fremaux@gmail.com)
  * @copyright       2016 onwards Valery Fremaux (valery.fremaux@gmail.com)
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later

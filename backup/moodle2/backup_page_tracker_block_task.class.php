@@ -18,7 +18,6 @@
  * Block backup tasks
  *
  * @package         block_page_tracker
- * @subpackage      backup-moodle2
  * @author          Valery Fremaux (valery.fremaux@gmail.com)
  * @copyright       2016 onwards Valery Fremaux (valery.fremaux@gmail.com)
  * @license         http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -64,7 +63,7 @@ class backup_page_tracker_block_task extends backup_block_task {
     /**
      * Encode embedded links
      */
-    static public function encode_content_links($content) {
+    public static function encode_content_links($content) {
         return $content; // No special encoding of links.
     }
 }

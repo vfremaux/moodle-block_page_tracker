@@ -17,16 +17,17 @@
 /**
  * Form for editing Page tracker block instances.
  *
- * @package   block_page_tracker
- * @author          Valery Fremaux (valery.fremaux@gmail.com)
- * @copyright       2012 onwards Valery Fremaux (valery.fremaux@gmail.com)
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     block_page_tracker
+ * @author      Valery Fremaux (valery.fremaux@gmail.com)
+ * @copyright   2012 onwards Valery Fremaux (valery.fremaux@gmail.com)
+ * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
 defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->dirroot.'/course/format/page/classes/page.class.php');
 
-use \format\page\course_page;
+use format_page\course_page;
 
 class block_page_tracker_edit_form extends block_edit_form {
 
@@ -77,6 +78,9 @@ class block_page_tracker_edit_form extends block_edit_form {
         }
         $mform->addElement('select', 'config_depth', get_string('depth', 'block_page_tracker'), $leveloptions);
         $mform->setDefault('config_depth', isset($config->defaultdepth) ? $config->defaultdepth : 100);
+
+        $mform->addElement('select', 'config_maskabove', get_string('maskabove', 'block_page_tracker'), $leveloptions);
+        $mform->setDefault('config_maskabove', isset($config->maskabove) ? $config->maskabove : 1);
 
         $mform->addElement('advcheckbox', 'config_usemenulabels', get_string('usemenulabels', 'block_page_tracker'), '');
         $mform->setDefault('config_usemenulabels', isset($config->defaultusemenulabels) ? $config->defaultusemenulabels : true);

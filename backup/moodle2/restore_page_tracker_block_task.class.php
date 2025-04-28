@@ -15,12 +15,14 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * Restore tasks
+ *
  * @package     block_page_tracker
- * @subpackage  backup-moodle2
- * @author          Valery Fremaux (valery.fremaux@gmail.com)
- * @copyright       2016 onwards Valery Fremaux (valery.fremaux@gmail.com)
- * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @author      Valery Fremaux (valery.fremaux@gmail.com)
+ * @copyright   2016 onwards Valery Fremaux (valery.fremaux@gmail.com)
+ * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
 defined('MOODLE_INTERNAL') || die;
 
 require_once($CFG->dirroot.'/blocks/page_tracker/backup/moodle2/restore_page_tracker_stepslib.php');
@@ -35,7 +37,7 @@ class restore_page_tracker_block_task extends restore_block_task {
      * Restore settings definition
      */
     protected function define_my_settings() {
-    	assert(true);
+        assert(true);
     }
 
     /**
@@ -64,14 +66,14 @@ class restore_page_tracker_block_task extends restore_block_task {
     /**
      * Define contents to encode
      */
-    static public function define_decode_contents() {
+    public static function define_decode_contents() {
         return [];
     }
 
     /**
      * Define decoding rules.
      */
-    static public function define_decode_rules() {
+    public static function define_decode_rules() {
         return [];
     }
 

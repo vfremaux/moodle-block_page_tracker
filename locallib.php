@@ -23,8 +23,6 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die;
-
 define('PAGE_TRACKER_NOLINKS', 0);
 define('PAGE_TRACKER_LINKSVISITED', 1);
 define('PAGE_TRACKER_LINKS', 2);

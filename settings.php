@@ -23,7 +23,7 @@
  */
 defined('MOODLE_INTERNAL') || die();
 
-$linkoptions = array();
+$linkoptions = [];
 $linkoptions['0'] = get_string('no');
 $linkoptions['1'] = get_string('yesonvisited', 'block_page_tracker');
 $linkoptions['2'] = get_string('yes');
@@ -58,6 +58,17 @@ $key = 'block_page_tracker/defaultstartpage';
 $label = get_string('configdefaultstartpage', 'block_page_tracker');
 $desc = get_string('configdefaultstartpage_desc', 'block_page_tracker');
 $settings->add(new admin_setting_configselect($key, $label, $desc, 0, $pageoptions));
+
+$maskoptions = [];
+$maskoptions['0'] = get_string('donotmask', 'block_page_tracker');
+$maskoptions['1'] = 1;
+$maskoptions['2'] = 2;
+$maskoptions['3'] = 3;
+
+$key = 'block_page_tracker/defaultmaskabove';
+$label = get_string('configdefaultmaskabove', 'block_page_tracker');
+$desc = get_string('configdefaultmaskabove_desc', 'block_page_tracker');
+$settings->add(new admin_setting_configselect($key, $label, $desc, 0, $maskoptions));
 
 $key = 'block_page_tracker/defaultusemenulabels';
 $label = get_string('configdefaultusemenulabels', 'block_page_tracker');

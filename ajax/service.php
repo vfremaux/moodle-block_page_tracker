@@ -34,16 +34,14 @@ if (!$DB->get_record('block_instances', ['id' => $blockid])) {
     throw new moodle_exception('badsectionid');
 }
 
-if (!$course = $DB->get_record('course', ['id' => $id])) {
-    throw new moodle_exception('coursemisconf');
-}
+$course = $DB->get_record('course', ['id' => $id], '*', MUST_EXIST);
 
 require_login($course);
 
 if ($action == 'collapse') {
 
     if (!isset($SESSION->pagetracker)) {
-        $SESSION->pagetracker = new StdClass;
+        $SESSION->pagetracker = new StdClass();
     }
 
     $trackid = $blockid.'_'.$itemid;
@@ -52,7 +50,7 @@ if ($action == 'collapse') {
 } else if ($action == 'expand') {
 
     if (!isset($SESSION->pagetracker)) {
-        $SESSION->pagetracker = new StdClass;
+        $SESSION->pagetracker = new StdClass();
     }
 
     $trackid = $blockid.'_'.$itemid;

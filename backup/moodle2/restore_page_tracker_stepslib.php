@@ -18,10 +18,9 @@
  * Restore steps definition
  *
  * @package    block_page_tracker
- * @subpackage backup-moodle2
- * @author          Valery Fremaux (valery.fremaux@gmail.com)
- * @copyright       2016 onwards Valery Fremaux (valery.fremaux@gmail.com)
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @author     Valery Fremaux (valery.fremaux@gmail.com)
+ * @copyright  2016 onwards Valery Fremaux (valery.fremaux@gmail.com)
+ * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 /**
@@ -29,7 +28,7 @@
  */
 class restore_page_tracker_block_structure_step extends restore_structure_step {
 
-    /** 
+    /**
      * Defines XML Structure to read
      */
     protected function define_structure() {

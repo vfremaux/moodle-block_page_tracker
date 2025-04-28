@@ -27,7 +27,7 @@ defined('MOODLE_INTERNAL') || die();
 require_once($CFG->dirroot.'/blocks/page_tracker/locallib.php');
 require_once($CFG->dirroot.'/course/format/page/lib.php');
 
-use format\page\course_page;
+use format_page\course_page;
 
 /**
  * Main block class.
@@ -84,6 +84,9 @@ class block_page_tracker extends block_base {
         }
     }
 
+    /**
+     * Standard specialization.
+     */
     public function specialization() {
         if (!empty($this->config)) {
             if (!empty($this->config->title)) {
@@ -95,7 +98,7 @@ class block_page_tracker extends block_base {
             }
 
             if (!isset($this->config->depth)) {
-                @$this->config->depth = 100;
+                $this->config->depth = 100;
             }
 
             $this->reldepth = $this->config->depth;
@@ -151,10 +154,10 @@ class block_page_tracker extends block_base {
             return $this->content;
         }
 
-        $filteropt = new stdClass;
+        $filteropt = new stdClass();
         $filteropt->noclean = true;
 
-        $this->content = new stdClass;
+        $this->content = new stdClass();
         $template = $this->get_summary();
         $template->level = 0;
         $template->blockid = $this->instance->id;
@@ -172,7 +175,7 @@ class block_page_tracker extends block_base {
      */
     protected function initialize_config() {
         $config = get_config('block_page_tracker');
-        $this->config = new StdClass;
+        $this->config = new StdClass();
         $this->config->initialexpanded = true;
         $this->config->allowlinks = $config->defaultallowlinks;
         $this->config->hidedisabledlinks = $config->defaulthidedisabledlinks;
@@ -191,7 +194,7 @@ class block_page_tracker extends block_base {
     public function get_summary() {
         global $CFG, $USER, $COURSE, $DB, $OUTPUT;
 
-        $template = new StdClass;
+        $template = new StdClass();
 
         $this->context = context_block::instance($this->instance->id);
         $coursecontext = context_course::instance($COURSE->id);
@@ -517,9 +520,7 @@ class block_page_tracker extends block_base {
      * Get the JS required when this block is in page
      */
     public function get_required_javascript() {
-        global $PAGE;
-
-        $PAGE->requires->js_call_amd('block_page_tracker/pagetracker', 'init', [$this->id]);
+        $this->page->requires->js_call_amd('block_page_tracker/pagetracker', 'init', [[$this->instance->id]]);
     }
 
     /** 
