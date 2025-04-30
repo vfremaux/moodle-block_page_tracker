@@ -8,13 +8,27 @@
     line-height: 22px;
 }
 
-a.block-pagetracker.is-current-page {
+.pagetracker-page {
+    border-radius: 4px;
+    padding: 0.2rem;
+}
+
+.pagetracker-mark img {
+    width: 25px;
+    height: 25px;
+}
+
+.pagetracker-page.is-current-page {
     color: #fff;
-    background-color: #ddd;
+    background-color: #e0e0e0;
+}
+
+.pagetracker-page.is-hidden-page {
+    opacity: 0.4;
 }
 
 /* fix boost theme */
-.block-pagetracker.is-current-page::before {
+.pagetracker-page.is-current-page::before {
     border: none;
 }
 
@@ -138,7 +152,7 @@ a.block-pagetracker.is-current-page {
         width: 85%;
     }
 
-    .block-pagetracker.current {
+    .block-pagetracker-page.is-current-page {
         color: initial;
         font-weight: bolder;
     }

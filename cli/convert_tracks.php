@@ -15,9 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * A CLI script to convert and load tracks
+ *
  * @package     block_page_tracker
- * @subpackage  blocks
- * @copyright   2016 Valery Fremaux (valery.fremaux@gmail.com)
+ * @author          Valery Fremaux (valery.fremaux@gmail.com)
+ * @copyright       2016 onwards Valery Fremaux (valery.fremaux@gmail.com)
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 global $CLI_VMOODLE_PRECHECK;
@@ -34,7 +36,13 @@ if (!isset($CFG->dirroot)) {
 
 require_once($CFG->dirroot.'/lib/clilib.php'); // Cli only functions.
 
-list($options, $unrecognized) = cli_get_params(array('help' => false, 'host' => true), array('h' => 'help', 'H' => 'host'));
+list($options, $unrecognized) = cli_get_params([
+    'help' => false,
+    'host' => true,
+], [
+    'h' => 'help',
+    'H' => 'host',
+]);
 
 if ($unrecognized) {
     $unrecognized = implode("\n  ", $unrecognized);

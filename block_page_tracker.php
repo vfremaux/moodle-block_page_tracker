@@ -24,46 +24,69 @@
  */
 defined('MOODLE_INTERNAL') || die();
 
-/*
- * generates a menu list of child pages ("stations") for a paged format course
- */
-
 require_once($CFG->dirroot.'/blocks/page_tracker/locallib.php');
 require_once($CFG->dirroot.'/course/format/page/lib.php');
 
-use \format\page\course_page;
+use format_page\course_page;
 
+/**
+ * Main block class.
+ * Generates a menu list of child pages ("stations") for a paged format course
+ */
 class block_page_tracker extends block_base {
 
+    /** @var Errors should be always traced when trace is on. */
+    const TRACE_ERRORS = 1;
+
+    /** @var Notices are important notices in normal execution. */
+    const TRACE_NOTICE = 3;
+
+    /** @var Debug are debug time notices that should be burried in debug_fine level when debug is ok. */
+    const TRACE_DEBUG = 5;
+
+    /** @var Data level is when requiring to see data structures content. */
+    const TRACE_DATE = 8;
+
+    /** @var Debug fine are control points we want to keep when code is refactored and debug needs to be reactivated. */
+    const TRACE_DEBUG_FINE = 8;
+
+    /** @var array trace of visited pages. */
     protected $tracks;
 
+    /** @var array tick images. */
     public static  $ticks;
 
     /**
-     * The relative curent tree depth. Loaded with the block instance initial config value,
+     * @var int The relative curent tree depth. Loaded with the block instance initial config value,
      * will be decremented by one for each child level until reaches 0.
      */
     protected $reldepth;
 
     /**
-     * the current loaded page in screen.
+     * @var the current loaded page in screen.
      */
     protected $current;
 
+    /**
+     * Block standard init.
+     */
     public function init() {
         global $OUTPUT;
 
-        $this->title = get_string('blockname', 'block_page_tracker');
+        $this->title = '';
 
         if (is_null(self::$ticks)) {
             $ticks = new StdClass();
-            $ticks->image = $OUTPUT->image_url('tick_green_big', 'block_page_tracker');
-            $ticks->imagepartial = $OUTPUT->image_url('tick_green_big_partial', 'block_page_tracker');
-            $ticks->imageempty = $OUTPUT->image_url('tick_green_big_empty', 'block_page_tracker');
+            $ticks->image = $OUTPUT->image_url('bullet_visited', 'block_page_tracker');
+            $ticks->imagepartial = $OUTPUT->image_url('bullet_half-visited', 'block_page_tracker');
+            $ticks->imageempty = $OUTPUT->image_url('bullet', 'block_page_tracker');
             self::$ticks = $ticks;
         }
     }
 
+    /**
+     * Standard specialization.
+     */
     public function specialization() {
         if (!empty($this->config)) {
             if (!empty($this->config->title)) {
@@ -75,29 +98,44 @@ class block_page_tracker extends block_base {
             }
 
             if (!isset($this->config->depth)) {
-                @$this->config->depth = 100;
+                $this->config->depth = 100;
             }
 
             $this->reldepth = $this->config->depth;
         }
     }
 
+    /**
+     * Does the block have global config ?
+     */
     public function has_config() {
         return true;
     }
 
+    /**
+     * Does the block have instance config ?
+     */
     public function instance_allow_config() {
         return true;
     }
 
+    /**
+     * Does the block allow multiples instances in course ?
+     */
     public function instance_allow_multiple() {
         return true;
     }
 
+    /**
+     * Wich format and page layouts allowed ?
+     */
     public function applicable_formats() {
-        return array('all' => false, 'course' => true, 'mod-*' => true);
+        return ['all' => false, 'course' => true, 'mod-*' => true];
     }
 
+    /**
+     * Main block content
+     */
     public function get_content() {
         global $COURSE, $OUTPUT;
 
@@ -116,15 +154,15 @@ class block_page_tracker extends block_base {
             return $this->content;
         }
 
-        $filteropt = new stdClass;
+        $filteropt = new stdClass();
         $filteropt->noclean = true;
 
-        $this->content = new stdClass;
+        $this->content = new stdClass();
         $template = $this->get_summary();
         $template->level = 0;
         $template->blockid = $this->instance->id;
         $template->courseid = $COURSE->id;
-        $template->showmarks = !$this->config->hideaccessbullets;
+        $template->showmarks = empty($this->config->hideaccessbullets);
 
         $this->content->text = $OUTPUT->render_from_template('block_page_tracker/pagelist', $template);
         $this->content->footer = '';
@@ -132,9 +170,12 @@ class block_page_tracker extends block_base {
         return $this->content;
     }
 
+    /**
+     * Makes a default config
+     */
     protected function initialize_config() {
         $config = get_config('block_page_tracker');
-        $this->config = new StdClass;
+        $this->config = new StdClass();
         $this->config->initialexpanded = true;
         $this->config->allowlinks = $config->defaultallowlinks;
         $this->config->hidedisabledlinks = $config->defaulthidedisabledlinks;
@@ -142,6 +183,7 @@ class block_page_tracker extends block_base {
         $this->config->usemenulabels = $config->defaultusemenulabels;
         $this->config->hideaccessbullets = $config->defaulthideaccessbullets;
         $this->config->showanyway = true;
+        $this->config->startpage = 0;
 
         $this->instance_config_save($this->config);
     }
@@ -152,7 +194,7 @@ class block_page_tracker extends block_base {
     public function get_summary() {
         global $CFG, $USER, $COURSE, $DB, $OUTPUT;
 
-        $template = new StdClass;
+        $template = new StdClass();
 
         $this->context = context_block::instance($this->instance->id);
         $coursecontext = context_course::instance($COURSE->id);
@@ -161,8 +203,12 @@ class block_page_tracker extends block_base {
             $courseid = $this->instance->pageid;
         }
 
+        if (!isset($this->config)) {
+            $this->initialize_config();
+        }
+
         if (!isset($this->config->startpage)) {
-            @$this->config->startpage = 0;
+            $this->config->startpage = 0;
         }
 
         $reldepth = 0;
@@ -198,14 +244,12 @@ class block_page_tracker extends block_base {
 
             // Find current's parent and plug current into tree.
             if ($current->parent) {
-                $flat[$current->parent]->childs = array($current->id => $current);
+                $flat[$current->parent]->childs = [$current->id => $current];
             }
             $flat[$current->id] = $current;
-
-            // block_page_tracker_debug_print_tree($pages);
         } else {
             // Take all pages from absolute root.
-            $pages = course_page::get_all_pages($courseid, 'nested');
+            $pages = course_page::get_all_pages($courseid, 'nested', false, 0, $this->config->depth);
         }
 
         $this->current = course_page::get_current_page($courseid);
@@ -236,7 +280,7 @@ class block_page_tracker extends block_base {
 
         // Pre scans page for completion compilation.
         foreach ($pages as $pid => $page) {
-            if (!empty($this->tracks) && in_array($pid, $this->tracks)) {
+            if (!empty($this->tracks) && in_array($pid, $this->tracks) || ($page->id == $this->current->id)) {
                 $pages[$pid]->accessed = 1;
             } else {
                 $pages[$pid]->accessed = 0;
@@ -256,21 +300,19 @@ class block_page_tracker extends block_base {
         $template = $this->get_sub_stations($toppage);
         $template->initialtoggleclass = ''; // Top level must be never collapsed.
 
-        // debug_trace(block_page_tracker_debug_print_tree($template));
         return $template;
     }
 
     /**
      * Recursive printing of children pages.
-     * @param objectref &$page the parent station
-     * @param int $currentdepth the depth in hierarchy of the current page.
+     * @param object $page the parent station
      */
-    public function get_sub_stations(&$page) {
+    public function get_sub_stations($page) {
         global $CFG, $COURSE, $OUTPUT;
 
         $debug = optional_param('debug', false, PARAM_BOOL);
         if ($debug) {
-            debug_trace("Sub stations for page $page->id ", TRACE_DEBUG);
+            self::debug_trace("Sub stations for page $page->id ", self::TRACE_DEBUG);
         }
 
         $currentpage = optional_param('page', 0, PARAM_INT);
@@ -283,37 +325,37 @@ class block_page_tracker extends block_base {
         if (!empty($children)) {
             foreach ($children as $child) {
 
-                debug_trace(" => Child $child->id ", TRACE_DEBUG_FINE);
+                if ($debug) {
+                    self::debug_trace(" => Child $child->id ", self::TRACE_DEBUG_FINE);
+                }
 
                 $displaymenu = $child->displaymenu;
                 if (empty($displaymenu)) {
-                    debug_trace(" => Child {$child->id} not displayed by page setting ", TRACE_DEBUG_FINE);
                     continue;
                 }
 
                 if (empty($this->config->showanyway)) {
-                    if (!$child->is_visible(false)) {
+                    if (!$child->is_visible(false) || !$child->is_available()) {
                         if (!has_capability('format/page:editpages', $coursecontext)) {
-                            debug_trace(" => Child {$child->id} not visible ", TRACE_DEBUG_FINE);
+                            self::debug_trace("Hide page as not visible and no override editing cap", self::TRACE_DEBUG_FINE);
                             continue;
                         }
                     }
                 }
 
-                $template->hassubs = true; // At least first visible child must trigger.
+                $template->hassubs = true && ($this->reldepth > 0); // At least first visible child must trigger.
                 $childtpl = $this->export_page_template($child);
 
                 if ($this->is_visible($child)) {
-                    $this->reldepth--;
                     // $childtpl->subs = null;
                     if ($this->reldepth > 0) {
+                        $this->reldepth--;
                         $template->pages[] = $this->get_sub_stations($child);
+                        $this->reldepth++;
                     }
-                    $this->reldepth++;
+                    $template->hassubs = true && ($this->reldepth > 0); // At least first visible child must trigger.
                 } else {
                     $childtpl->hassubs = false;
-                    // $childtpl->subs = null;
-                    debug_trace(" => Child link not visible page tracker config  ", TRACE_DEBUG_FINE);
                 }
             }
         }
@@ -322,6 +364,7 @@ class block_page_tracker extends block_base {
 
     /**
      * Exports all template data for one page to print in list.
+     * @param object $page
      */
     protected function export_page_template($page) {
         global $COURSE, $OUTPUT, $SESSION;
@@ -329,15 +372,15 @@ class block_page_tracker extends block_base {
         $pagetpl = new Stdclass;
         $pagetpl->id = $page->id;
 
-        $realvisible = $page->is_visible(true);
-        $pagetpl->class = ($realvisible) ? '' : 'shadow';
-        $pagetpl->class .= ($this->current->id == $page->id) ? 'is-current-page' : '';
+        $realvisible = $page->is_visible_page();
+        $pagetpl->iscurrentclass = ($realvisible) ? '' : 'is-hidden-page';
+        $pagetpl->iscurrentclass .= ($this->current->id == $page->id) ? 'is-current-page' : '';
         $isenabled = $page->check_activity_lock();
 
         $pagetpl->parent = $page->get_parent(true);
-        $pagetpl->initialexpanded = (@$this->config->initialexpanded) ? 'true' : '';
-        $pagetpl->initialtoggleclass = (@$this->config->initialexpanded) ? '' : 'collapsed';
-        $initialicon = (@$this->config->initialexpanded) ? 'minus' : 'plus';
+        $pagetpl->initialexpanded = ($this->config->initialexpanded ?? 1) ? 'true' : '';
+        $pagetpl->initialtoggleclass = ($this->config->initialexpanded ?? 1) ? '' : 'collapsed';
+        $initialicon = ($this->config->initialexpanded ?? 1) ? 'minus' : 'plus';
         $pagetpl->initialicon = $OUTPUT->pix_icon('t/switch_'.$initialicon, '', 'moodle');
 
         // Override by session if set.
@@ -358,8 +401,10 @@ class block_page_tracker extends block_base {
 
         if (empty($this->config->hideaccessbullets)) {
             if ($page->accessed) {
+                $pagetpl->hasbeenseenclass = 'has-been-seen';
                 if ($page->complete) {
                     $pagetpl->markurl = self::$ticks->image;
+                    $pagetpl->hasbeenseenclass = 'has-been-seen full';
                 } else {
                     $pagetpl->markurl = self::$ticks->imagepartial;
                 }
@@ -378,7 +423,7 @@ class block_page_tracker extends block_base {
         }
 
         $pagetpl->level = 0 + @$page->get_page_depth();
-        $pagetpl->pageurl = new moodle_url('/course/view.php', array('id' => $COURSE->id, 'page' => $page->id));
+        $pagetpl->pageurl = new moodle_url('/course/view.php', ['id' => $COURSE->id, 'page' => $page->id]);
         $pagetpl->islink = $this->is_link($page);
 
         $parentid = $page->get_parent(true);
@@ -390,9 +435,9 @@ class block_page_tracker extends block_base {
     /**
      * Recursive down scann into children to check if some
      * have been accessed already.
-     * @param objectref &$page the parent course page
+     * @param object $page the parent course page
      */
-    public function check_childs_access(&$page) {
+    public function check_childs_access($page) {
         global $USER, $COURSE, $DB;
 
         $complete = true;
@@ -416,16 +461,24 @@ class block_page_tracker extends block_base {
         return $complete;
     }
 
+    /**
+     * Checks if the page entry needs a link.
+     * @param object $page the course_page object
+     */
     protected function is_link($page) {
+        global $USER, $COURSE;
+
+        $context = context_course::instance($COURSE->id);
+        $isenrolled = is_enrolled($context, $USER);
 
         switch ($this->config->allowlinks) {
             case PAGE_TRACKER_LINKS: {
-                return true;
+                return $page->check_activity_lock();
             }
 
             case PAGE_TRACKER_LINKSVISITED: {
-                if ($page->accessed) {
-                    return true;
+                if ($page->accessed && ($isenrolled || has_capability('moodle/course:viewhiddenactivities', $context))) {
+                    return $page->check_activity_lock();
                 }
             }
 
@@ -433,11 +486,19 @@ class block_page_tracker extends block_base {
                 return false;
             }
         }
+
+        return false;
     }
 
-    protected function is_visible($child) {
+    /**
+     * Checks if a page node is a visible page
+     * @param object $page
+     * @return bool
+     */
+    protected function is_visible($page) {
         return empty($this->config->hidedisabledlinks) ||
-                $child->accessed ||
+                $page->accessed ||
+                    ($this->current->id == $page->id) ||
                         $this->config->allowlinks != PAGE_TRACKER_LINKSVISITED ||
                                 has_capability('block/page_tracker:accessallpages', $this->context);
     }
@@ -449,15 +510,30 @@ class block_page_tracker extends block_base {
     protected function get_tracks() {
         global $DB, $COURSE, $USER;
 
-        $params = array('courseid' => $COURSE->id, 'userid' => $USER->id);
+        $params = ['courseid' => $COURSE->id, 'userid' => $USER->id];
         if ($tracks = $DB->get_records('block_page_tracker', $params, 'id', 'DISTINCT pageid,pageid')) {
             $this->tracks = array_keys($tracks);
         }
     }
 
+    /**
+     * Get the JS required when this block is in page
+     */
     public function get_required_javascript() {
-        global $PAGE;
+        $this->page->requires->js_call_amd('block_page_tracker/pagetracker', 'init', [[$this->instance->id]]);
+    }
 
-        $PAGE->requires->js_call_amd('block_page_tracker/pagetracker', 'init');
+    /** 
+     * Wrapper to APL general debug tools
+     *
+     * @param string $msg
+     * @param int $level
+     * @param string $label
+     * @param int $backtracelevel
+     */
+    public static function debug_trace($msg, $level = self::TRACE_DEBUG, $label = '', $backtracelevel = 1) {
+        if (function_exists('debug_trace')) {
+            debug_trace($msg, $level, $label, $backtracelevel);
+        }
     }
 }

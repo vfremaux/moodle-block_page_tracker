@@ -20,13 +20,16 @@ define(['jquery', 'core/log', 'core/config'], function($, log, cfg) {
 
     var pagetracker = {
 
-        init: function() {
-            $('.pagetracker-toggle-handle').bind('click', this.toggle);
+        init: function(params) {
+            // Do init by instance to avoid togggle event overriding when multiple instances are used.
+            $('#inst'+params[0]+' .pagetracker-toggle-handle').bind('click', this.toggle);
 
             log.debug("AMD Page Tracker Initialized");
         },
 
-        toggle: function() {
+        toggle: function(e) {
+
+            e.stopPropagation();
 
             var that = $(this);
             var url = cfg.wwwroot + '/blocks/page_tracker/ajax/service.php';
@@ -37,7 +40,7 @@ define(['jquery', 'core/log', 'core/config'], function($, log, cfg) {
             url += '&blockid=' + blockid;
             url += '&itemid=' + itemid;
 
-            log.debug("AMD Page Tracker : Got fo " + that.attr('id'));
+            log.debug("AMD Page Tracker : Got for " + that.attr('id'));
             var subnodes = $('ul[data-parent="' + that.attr('id') + '"]');
             if (subnodes.hasClass('collapsed')) {
                 $('#' + that.attr('id') + ' i').removeClass('fa-plus');
