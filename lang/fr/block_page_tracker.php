@@ -17,9 +17,10 @@
 /**
  * Block Page Tracker Language File
  *
- * @author Valery Fremaux
- * @version $Id: block_page_tracker.php,v 1.5 2012-02-16 19:53:55 vf Exp $
- * @package block_page_tracker
+ * @package    block_page_tracker
+ * @author     Valery Fremaux (valery.fremaux@gmail.com)
+ * @copyright  2016 onwards Valery Fremaux (valery.fremaux@gmail.com)
+ * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 $string['page_tracker:addinstance'] = 'Peut ajouter une instance';
@@ -50,8 +51,6 @@ $string['configdefaulthidedisabledlinks_desc'] = 'Valeur par défaut s\'appliqua
 $string['configdefaultdepth'] = 'Profondeur (défaut)';
 $string['configdefaultdepth_desc'] = 'Valeur par défaut s\'appliquant à toute nouvelle instance';
 $string['configdefaultusemenulabels'] = 'Utiliser les noms de sommaire (défaut)';
-$string['configdefaultusemenulabels_help'] = 'Si cette option est active, les noms affichés dans le bloc sont les noms préparés pour les items de sommaire. Sinon, 
-ce sera le nom longs de la page';
 $string['configdefaultstartpage'] = 'Page de démarrage par défaut (positions generiques)';
 $string['configdefaultstartpage_desc'] = 'Les choix génériques pour le début de la hiérarchie de pages';
 $string['configdefaultusemenulabels_desc'] = 'Valeur par défaut s\'appliquant à toute nouvelle instance';
@@ -62,8 +61,10 @@ $string['showanyway'] = 'Toujours montrer';
 $string['allowlinks_help'] = 'Les liens ne seront générés que sur des pages déjà vues si cette option est active, car les items
 pourraient être affichés à des utilisateurs qui n\'en ont pas le droit d\'accès.';
 
-$string['showanyway_help'] = 'Si activé, toutes les entrées de pages seront visibles dans le sommaire, que l\'utilisateur y ait accès ou non.';
+$string['showanyway_help'] = 'Si activé, toutes les entrées de pages seront visibles dans le sommaire, que l\'utilisateur
+ y ait accès ou non.';
+
+$string['configdefaultusemenulabels_help'] = 'Si cette option est active, les noms affichés dans le bloc sont les noms préparés
+ pour les items de sommaire. Sinon, ce sera le nom longs de la page';
 
 $string['upgradepagetrackerconfig'] = 'Mise à niveau des configurations des Sommaires de cours';
-
-

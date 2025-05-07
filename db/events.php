@@ -15,36 +15,35 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * Block events
+ *
  * @package    block_page_tracker
  * @category   blocks
  * @author     Valery Fremaux (valery.fremaux@gmail.com)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  2014 valery fremaux (valery.fremaux@gmail.com)
  */
-defined('MOODLE_INTERNAL') || die();
 
-$observers = array (
-    array(
+$observers = [
+    [
         'eventname'   => '\core\event\course_deleted',
         'callback'    => 'block_page_tracker_event_observer::on_course_deleted',
         'includefile' => '/blocks/page_tracker/observers.php',
         'internal'    => true,
         'priority'    => 9999,
-    ),
-
-    array(
+    ],
+    [
         'eventname'   => '\core\event\course_reset_started',
         'callback'    => 'block_page_tracker_event_observer::on_course_reset_started',
         'includefile' => '/blocks/page_tracker/observers.php',
         'internal'    => true,
         'priority'    => 9999,
-    ),
-
-    array(
+    ],
+    [
         'eventname'   => '\format_page\event\course_page_viewed',
         'callback'    => 'block_page_tracker_event_observer::on_course_page_viewed',
         'includefile' => '/blocks/page_tracker/observers.php',
         'internal'    => true,
         'priority'    => 9999,
-    ),
-);
+    ],
+];

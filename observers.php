@@ -15,11 +15,12 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * Observes some moodle events
+ *
  * @package    block_page_tracker
- * @category   blocks
  * @author     Valery Fremaux (valery.fremaux@gmail.com)
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  2014 valery fremaux (valery.fremaux@gmail.com)
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  */
 defined('MOODLE_INTERNAL') || die();
 
@@ -33,27 +34,29 @@ class block_page_tracker_event_observer {
     /**
      * Triggered when a course is deleted
      * ensure tracking data are removed
+     * @param object $e the event
      */
     public static function on_course_deleted($e) {
         global $DB;
 
-        $format = $DB->get_field('course', 'format', array('id' => $e->courseid));
+        $format = $DB->get_field('course', 'format', ['id' => $e->courseid]);
         if ($format != 'page') {
             return;
         }
 
-        $DB->delete_records('block_page_tracker', array('courseid' => $e->courseid));
+        $DB->delete_records('block_page_tracker', ['courseid' => $e->courseid]);
     }
 
     /**
      * Triggered when a course is starting reset
      * Role assignments are still in DB and can be scanned
      * for tracking preprocessing
+     * @param object $e the event
      */
     public static function on_course_reset_started($e) {
         global $DB;
 
-        $format = $DB->get_field('course', 'format', array('id' => $e->courseid));
+        $format = $DB->get_field('course', 'format', ['id' => $e->courseid]);
         if ($format != 'page') {
             return;
         }
@@ -68,7 +71,7 @@ class block_page_tracker_event_observer {
                 $roleassigns = get_users_from_role_on_context($role, $coursecontext);
                 if (!empty($roleassigns)) {
                     foreach ($roleassigns as $ra) {
-                        $DB->delete_records('block_page_tracker', array('courseid' => $e->courseid, 'userid' => $ra->userid));
+                        $DB->delete_records('block_page_tracker', ['courseid' => $e->courseid, 'userid' => $ra->userid]);
                     }
                 }
             }
@@ -78,6 +81,7 @@ class block_page_tracker_event_observer {
     /**
      * Triggered when a role is unassigned in the course
      * Should check this is the leader role, and let an associated team unleaded
+     * @param object $e the event
      */
     public static function on_course_page_viewed($e) {
         punch_track($e->courseid, $e->objectid, $e->userid);

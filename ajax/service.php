@@ -15,6 +15,8 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * A general Ajax receiver
+ *
  * @package     block_page_tracker
  * @copyright   2008 onwards Valery Fremaux <http://docs.activeprolearn.com/en>
  * @author      Valery Fremaux <valery.fremaux@gmail.com>
@@ -28,20 +30,18 @@ $itemid = required_param('itemid', PARAM_INT); // the page id.
 $blockid = required_param('blockid', PARAM_INT);
 $action = required_param('what', PARAM_ALPHA);
 
-if (!$DB->get_record('block_instances', array('id' => $blockid))) {
-    print_error('badsectionid');
+if (!$DB->get_record('block_instances', ['id' => $blockid])) {
+    throw new moodle_exception('badsectionid');
 }
 
-if (!$course = $DB->get_record('course', array('id' => $id))) {
-    print_error('coursemisconf');
-}
+$course = $DB->get_record('course', ['id' => $id], '*', MUST_EXIST);
 
 require_login($course);
 
 if ($action == 'collapse') {
 
     if (!isset($SESSION->pagetracker)) {
-        $SESSION->pagetracker = new StdClass;
+        $SESSION->pagetracker = new StdClass();
     }
 
     $trackid = $blockid.'_'.$itemid;
@@ -50,7 +50,7 @@ if ($action == 'collapse') {
 } else if ($action == 'expand') {
 
     if (!isset($SESSION->pagetracker)) {
-        $SESSION->pagetracker = new StdClass;
+        $SESSION->pagetracker = new StdClass();
     }
 
     $trackid = $blockid.'_'.$itemid;

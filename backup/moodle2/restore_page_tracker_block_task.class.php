@@ -15,48 +15,71 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * Restore tasks
+ *
  * @package     block_page_tracker
- * @subpackage  backup-moodle2
+ * @author      Valery Fremaux (valery.fremaux@gmail.com)
  * @copyright   2016 onwards Valery Fremaux (valery.fremaux@gmail.com)
- * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
 defined('MOODLE_INTERNAL') || die;
 
 require_once($CFG->dirroot.'/blocks/page_tracker/backup/moodle2/restore_page_tracker_stepslib.php');
+
 /**
  * Specialised restore task for the page_tracker block
  * (has own DB structures to backup)
- *
- * TODO: Finish phpdocs
  */
 class restore_page_tracker_block_task extends restore_block_task {
 
+    /**
+     * Restore settings definition
+     */
     protected function define_my_settings() {
+        assert(true);
     }
 
+    /**
+     * Restore steps definition
+     */
     protected function define_my_steps() {
         $this->add_step(new restore_page_tracker_block_structure_step('page_tracker_structure', 'page_tracker.xml'));
     }
 
+    /**
+     * Identify fileareas to restore
+     */
     public function get_fileareas() {
         // No associated fileareas.
-        return array();
+        return [];
     }
 
+    /**
+     * Define attributes to encode
+     */
     public function get_configdata_encoded_attributes() {
         // No special handling of configdata.
-        return array();
+        return [];
     }
 
-    static public function define_decode_contents() {
-        return array();
+    /**
+     * Define contents to encode
+     */
+    public static function define_decode_contents() {
+        return [];
     }
 
-    static public function define_decode_rules() {
-        return array();
+    /**
+     * Define decoding rules.
+     */
+    public static function define_decode_rules() {
+        return [];
     }
 
-    // Each block will be responsible for his own remapping in is associated pageid.
+    /**
+     * Each block will be responsible for his own remapping in is associated pageid.
+     */
     public function after_restore() {
         global $DB;
 
@@ -71,17 +94,17 @@ class restore_page_tracker_block_task extends restore_block_task {
 
         // Adjust the serialized configdata->startpage to the actualized format_page id.
         // Get the configdata.
-        $configdata = $DB->get_field('block_instances', 'configdata', array('id' => $blockid));
+        $configdata = $DB->get_field('block_instances', 'configdata', ['id' => $blockid]);
         // Extract configdata.
         $config = unserialize(base64_decode($configdata));
         // Set array of used rss feeds.
         // TODO check this, not sure course modules are stored in backup mapping tables as this.
-        if ($config && !empty($config->startpage)) {
+        if ($config && $config->startpage) {
             $config->startpage = $this->get_mappingid('format_page', $config->startpage);
             // Serialize back the configdata
             $configdata = base64_encode(serialize($config));
             // Set the configdata back.
-            $DB->set_field('block_instances', 'configdata', $configdata, array('id' => $blockid));
+            $DB->set_field('block_instances', 'configdata', $configdata, ['id' => $blockid]);
         }
     }
 
@@ -99,6 +122,8 @@ class restore_page_tracker_block_task extends restore_block_task {
 
     /**
      * Return the complete mapping from the given itemname, itemid
+     * @param string $itemname
+     * @param int $oldid
      */
     public function get_mapping($itemname, $oldid) {
         return restore_dbops::get_backup_ids_record($this->plan->get_restoreid(), $itemname, $oldid);
@@ -111,9 +136,12 @@ class restore_page_tracker_block_task extends restore_block_task {
  */
 class restore_page_tracker_block_decode_content extends restore_decode_content {
 
-    // Temp storage for unserialized configdata.
+    /** @var string Temp storage for unserialized configdata. */
     protected $configdata;
 
+    /**
+     * Content iterator
+     */
     protected function get_iterator() {
         global $DB;
 
@@ -131,15 +159,21 @@ class restore_page_tracker_block_decode_content extends restore_decode_content {
                 b.itemname = ? AND
                 t.blockname = 'page_tracker'
         ";
-        $params = array($this->restoreid, $this->mapping);
+        $params = [$this->restoreid, $this->mapping];
         return ($DB->get_recordset_sql($sql, $params));
     }
 
+    /**
+     * Attribute preprocessor
+     */
     protected function preprocess_field($field) {
         $this->configdata = unserialize(base64_decode($field));
         return isset($this->configdata->text) ? $this->configdata->text : '';
     }
 
+    /**
+     * Attribute postprocessor
+     */
     protected function postprocess_field($field) {
         $this->configdata->text = $field;
         return base64_encode(serialize($this->configdata));

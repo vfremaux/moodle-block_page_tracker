@@ -17,9 +17,10 @@
 /**
  * Block Page Tracker Language File
  *
- * @author Valery Fremaux
- * @version $Id: block_page_tracker.php,v 1.4 2012-02-16 19:53:55 vf Exp $
- * @package block_page_tracker
+ * @package    block_page_tracker
+ * @author     Valery Fremaux (valery.fremaux@gmail.com)
+ * @copyright  2016 onwards Valery Fremaux (valery.fremaux@gmail.com)
+ * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 // Capabilities.
@@ -43,6 +44,7 @@ $string['selfupper'] = '-- Upper nav and current tree';
 $string['parent'] = '-- The parent page';
 $string['initiallyexpanded'] = 'Nodes initially expanded';
 $string['startpage'] = 'Start page';
+$string['donotmask'] = 'Do not mask';
 $string['yesonvisited'] = 'Only on visited pages';
 $string['hidedisabledlinks'] = 'Hide disabled links';
 $string['usemenulabels'] = 'Use menu labels';
@@ -56,6 +58,8 @@ $string['configdefaultdepth_desc'] = 'Default value for depth that applies to an
 $string['configdefaultstartpage'] = 'Start page default (generic)';
 $string['configdefaultstartpage_desc'] = 'Generic location for start page';
 $string['configdefaultusemenulabels'] = 'Default for menu labels';
+$string['configdefaultmaskabove'] = 'Default value for "mask above"';
+$string['configdefaultmaskabove_desc'] = 'Default value for "mask above"';
 $string['usemenulabels_help'] = 'If disabled, plain page name will be used for display';
 $string['configdefaultusemenulabels_desc'] = 'Default value for menu labels that applies to any new instance';
 $string['configdefaulthideaccessbullets'] = 'Default for hiding bullets';

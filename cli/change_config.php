@@ -15,9 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * Cli script for mass changin the config of page_tracker blocks
+ *
  * @package     block_page_tracker
- * @subpackage  blocks
- * @copyright   2016 Valery Fremaux (valery.fremaux@gmail.com)
+ * @author          Valery Fremaux (valery.fremaux@gmail.com)
+ * @copyright       2016 onwards Valery Fremaux (valery.fremaux@gmail.com)
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 global $CLI_VMOODLE_PRECHECK;
@@ -45,7 +47,7 @@ list($options, $unrecognized) = cli_get_params(
         'hideaccessmarks' => false,
         'showanyway' => false,
         'initiallyopened' => false,
-        'levels' => false
+        'levels' => false,
     ],
     [
         'h' => 'help',
@@ -57,7 +59,7 @@ list($options, $unrecognized) = cli_get_params(
         'm' => 'hideaccessmarks',
         's' => 'showanyway',
         'o' => 'initiallyopened',
-        'l' => 'levels'
+        'l' => 'levels',
     ]
 );
 

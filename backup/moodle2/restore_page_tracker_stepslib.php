@@ -15,16 +15,12 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * Restore steps definition
+ *
  * @package    block_page_tracker
- * @category   blocks
- * @subpackage backup-moodle2
- * @copyright  2003 onwards Eloy Lafuente (stronk7) {@link http://stronk7.com}
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-defined('MOODLE_INTERNAL') || die;
-
-/*
- * Define all the restore steps that wll be used by the restore_teams_block_task
+ * @author     Valery Fremaux (valery.fremaux@gmail.com)
+ * @copyright  2016 onwards Valery Fremaux (valery.fremaux@gmail.com)
+ * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 /**
@@ -32,9 +28,12 @@ defined('MOODLE_INTERNAL') || die;
  */
 class restore_page_tracker_block_structure_step extends restore_structure_step {
 
+    /**
+     * Defines XML Structure to read
+     */
     protected function define_structure() {
 
-        $paths = array();
+        $paths = [];
 
         // TODO : Check how to use userinfo.
         $paths[] = new restore_path_element('block', '/block', true);
@@ -43,6 +42,10 @@ class restore_page_tracker_block_structure_step extends restore_structure_step {
         return $paths;
     }
 
+    /**
+     * Process main block record
+     * @param object $data
+     */
     public function process_block($data) {
         global $DB;
 
@@ -50,8 +53,9 @@ class restore_page_tracker_block_structure_step extends restore_structure_step {
         assert(true);
     }
 
-    /*
-     *
+    /**
+     * Process track record
+     * @param object $data
      */
     public function process_track($data) {
         global $DB;

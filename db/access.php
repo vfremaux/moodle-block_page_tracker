@@ -14,30 +14,36 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-defined('MOODLE_INTERNAL') || die;
+/**
+ * Capabilities
+ *
+ * @package     block_page_tracker
+ * @author          Valery Fremaux (valery.fremaux@gmail.com)
+ * @copyright       2016 onwards Valery Fremaux (valery.fremaux@gmail.com)
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 
-$capabilities = array(
+$capabilities = [
 
-    'block/page_tracker:addinstance' => array(
-
-        'captype' => 'write',
-        'contextlevel' => CONTEXT_BLOCK,
-        'legacy' => array(
-            'manager' => CAP_ALLOW,
-            'editingteacher' => CAP_ALLOW
-        )
-    ),
-
-    'block/page_tracker:accessallpages' => array(
+    'block/page_tracker:addinstance' => [
 
         'captype' => 'write',
         'contextlevel' => CONTEXT_BLOCK,
-        'legacy' => array(
+        'legacy' => [
             'manager' => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
-            'teacher' => CAP_ALLOW
-        )
-    ),
+        ],
+    ],
 
-);
+    'block/page_tracker:accessallpages' => [
 
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_BLOCK,
+        'legacy' => [
+            'manager' => CAP_ALLOW,
+            'editingteacher' => CAP_ALLOW,
+            'teacher' => CAP_ALLOW,
+        ],
+    ],
+
+];
