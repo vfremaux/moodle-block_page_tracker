@@ -45,6 +45,7 @@ $string['parent'] = '-- The parent page';
 $string['initiallyexpanded'] = 'Nodes initially expanded';
 $string['startpage'] = 'Start page';
 $string['donotmask'] = 'Do not mask';
+$string['maskabove'] = 'Mask above this level';
 $string['yesonvisited'] = 'Only on visited pages';
 $string['hidedisabledlinks'] = 'Hide disabled links';
 $string['usemenulabels'] = 'Use menu labels';
