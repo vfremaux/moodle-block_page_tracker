@@ -54,7 +54,7 @@ class block_page_tracker extends block_base {
     protected $tracks;
 
     /** @var array tick images. */
-    public static  $ticks;
+    public static $ticks;
 
     /**
      * @var int The relative curent tree depth. Loaded with the block instance initial config value,
@@ -77,11 +77,15 @@ class block_page_tracker extends block_base {
 
         if (is_null(self::$ticks)) {
             $ticks = new StdClass();
-            $ticks->image = $OUTPUT->image_url('bullet_visited', 'block_page_tracker');
-            $ticks->imagepartial = $OUTPUT->image_url('bullet_half-visited', 'block_page_tracker');
-            $ticks->imageempty = $OUTPUT->image_url('bullet', 'block_page_tracker');
+            if (!defined('AJAX_SCRIPT') || !AJAX_SCRIPT) {
+                // image_url needs some theme initialisation.
+                $ticks->image = $OUTPUT->image_url('bullet_visited', 'block_page_tracker');
+                $ticks->imagepartial = $OUTPUT->image_url('bullet_half-visited', 'block_page_tracker');
+                $ticks->imageempty = $OUTPUT->image_url('bullet', 'block_page_tracker');
+            }
             self::$ticks = $ticks;
         }
+
     }
 
     /**
