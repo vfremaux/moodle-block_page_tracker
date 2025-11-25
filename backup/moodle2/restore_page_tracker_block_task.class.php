@@ -99,8 +99,11 @@ class restore_page_tracker_block_task extends restore_block_task {
         $config = unserialize(base64_decode($configdata));
         // Set array of used rss feeds.
         // TODO check this, not sure course modules are stored in backup mapping tables as this.
+        $config->startpage = $config->startpage ?? 0;
         if ($config && $config->startpage) {
-            $config->startpage = $this->get_mappingid('format_page', $config->startpage);
+            if ($config->startpage > 0) {
+                $config->startpage = $this->get_mappingid('format_page', $config->startpage);
+            }
             // Serialize back the configdata
             $configdata = base64_encode(serialize($config));
             // Set the configdata back.

@@ -39,8 +39,6 @@ $string['root'] = 'Racine du cours';
 $string['self'] = '-- La page courante';
 $string['selfupper'] = '-- Navigation supérieure et arbre courant';
 $string['parent'] = '-- La page parente';
-$string['donotmask'] = 'Ne pas masquer';
-$string['maskabove'] = 'Masquer au dessus de ce niveau';
 $string['startpage'] = 'Page de départ';
 $string['yesonvisited'] = 'Uniquement sur les pages déjà vues';
 $string['hidedisabledlinks'] = 'Cacher complètement les liens désactivés';
@@ -58,6 +56,7 @@ $string['configdefaultstartpage_desc'] = 'Les choix génériques pour le début 
 $string['configdefaultusemenulabels_desc'] = 'Valeur par défaut s\'appliquant à toute nouvelle instance';
 $string['configdefaulthideaccessbullets'] = 'Cacher les marques d\'accès (défaut)';
 $string['configdefaulthideaccessbullets_desc'] = 'Valeur par défaut s\'appliquant à toute nouvelle instance';
+$string['maskabove'] = 'Masquer au dessus du niveau';
 $string['showanyway'] = 'Toujours montrer';
 
 $string['allowlinks_help'] = 'Les liens ne seront générés que sur des pages déjà vues si cette option est active, car les items

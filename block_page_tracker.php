@@ -54,7 +54,7 @@ class block_page_tracker extends block_base {
     protected $tracks;
 
     /** @var array tick images. */
-    public static $ticks;
+    public static  $ticks;
 
     /**
      * @var int The relative curent tree depth. Loaded with the block instance initial config value,
@@ -77,15 +77,11 @@ class block_page_tracker extends block_base {
 
         if (is_null(self::$ticks)) {
             $ticks = new StdClass();
-            if (!defined('AJAX_SCRIPT') || !AJAX_SCRIPT) {
-                // image_url needs some theme initialisation.
-                $ticks->image = $OUTPUT->image_url('bullet_visited', 'block_page_tracker');
-                $ticks->imagepartial = $OUTPUT->image_url('bullet_half-visited', 'block_page_tracker');
-                $ticks->imageempty = $OUTPUT->image_url('bullet', 'block_page_tracker');
-            }
+            $ticks->image = $OUTPUT->image_url('bullet_visited', 'block_page_tracker');
+            $ticks->imagepartial = $OUTPUT->image_url('bullet_half-visited', 'block_page_tracker');
+            $ticks->imageempty = $OUTPUT->image_url('bullet', 'block_page_tracker');
             self::$ticks = $ticks;
         }
-
     }
 
     /**
@@ -134,7 +130,7 @@ class block_page_tracker extends block_base {
      * Wich format and page layouts allowed ?
      */
     public function applicable_formats() {
-        return ['all' => false, 'course' => true, 'mod-*' => true];
+        return ['all' => false, 'course-view-page' => true, 'mod-*' => true, 'layout-*' => false, 'layout-format_page' => true];
     }
 
     /**
@@ -373,12 +369,12 @@ class block_page_tracker extends block_base {
     protected function export_page_template($page) {
         global $COURSE, $OUTPUT, $SESSION;
 
-        $pagetpl = new Stdclass;
+        $pagetpl = new Stdclass();
         $pagetpl->id = $page->id;
 
         $realvisible = $page->is_visible_page();
-        $pagetpl->iscurrentclass = ($realvisible) ? '' : 'is-hidden-page';
-        $pagetpl->iscurrentclass .= ($this->current->id == $page->id) ? 'is-current-page' : '';
+        $pagetpl->iscurrentclass = ($realvisible) ? '' : 'is-hidden-page ';
+        $pagetpl->iscurrentclass .= ($this->current->id == $page->id) ? 'is-current-page ' : '';
         $isenabled = $page->check_activity_lock();
 
         $pagetpl->parent = $page->get_parent(true);
@@ -405,10 +401,10 @@ class block_page_tracker extends block_base {
 
         if (empty($this->config->hideaccessbullets)) {
             if ($page->accessed) {
-                $pagetpl->hasbeenseenclass = 'has-been-seen';
+                $pagetpl->hasbeenseenclass = 'has-been-seen ';
                 if ($page->complete) {
                     $pagetpl->markurl = self::$ticks->image;
-                    $pagetpl->hasbeenseenclass = 'has-been-seen full';
+                    $pagetpl->hasbeenseenclass = 'has-been-seen full ';
                 } else {
                     $pagetpl->markurl = self::$ticks->imagepartial;
                 }
