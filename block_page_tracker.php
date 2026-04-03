@@ -54,7 +54,7 @@ class block_page_tracker extends block_base {
     protected $tracks;
 
     /** @var array tick images. */
-    public static  $ticks;
+    public static $ticks;
 
     /**
      * @var int The relative curent tree depth. Loaded with the block instance initial config value,
@@ -77,11 +77,15 @@ class block_page_tracker extends block_base {
 
         if (is_null(self::$ticks)) {
             $ticks = new StdClass();
-            $ticks->image = $OUTPUT->image_url('bullet_visited', 'block_page_tracker');
-            $ticks->imagepartial = $OUTPUT->image_url('bullet_half-visited', 'block_page_tracker');
-            $ticks->imageempty = $OUTPUT->image_url('bullet', 'block_page_tracker');
+            if (!defined('AJAX_SCRIPT') || !AJAX_SCRIPT) {
+                // image_url needs some theme initialisation.
+                $ticks->image = $OUTPUT->image_url('bullet_visited', 'block_page_tracker');
+                $ticks->imagepartial = $OUTPUT->image_url('bullet_half-visited', 'block_page_tracker');
+                $ticks->imageempty = $OUTPUT->image_url('bullet', 'block_page_tracker');
+            }
             self::$ticks = $ticks;
         }
+
     }
 
     /**
@@ -346,7 +350,7 @@ class block_page_tracker extends block_base {
                 $template->hassubs = true && ($this->reldepth > 0); // At least first visible child must trigger.
                 $childtpl = $this->export_page_template($child);
 
-                if ($this->is_visible($child)) {
+                if ($child->is_visible() && $child->is_available()) {
                     // $childtpl->subs = null;
                     if ($this->reldepth > 0) {
                         $this->reldepth--;
@@ -373,13 +377,13 @@ class block_page_tracker extends block_base {
         $pagetpl->id = $page->id;
 
         $realvisible = $page->is_visible_page();
-        $pagetpl->iscurrentclass = ($realvisible) ? '' : 'is-hidden-page';
-        $pagetpl->iscurrentclass .= ($this->current->id == $page->id) ? 'is-current-page' : '';
+        $pagetpl->iscurrentclass = ($realvisible) ? '' : 'is-hidden-page ';
+        $pagetpl->iscurrentclass .= ($this->current->id == $page->id) ? 'is-current-page ' : '';
         $isenabled = $page->check_activity_lock();
 
         $pagetpl->parent = $page->get_parent(true);
         $pagetpl->initialexpanded = ($this->config->initialexpanded ?? 1) ? 'true' : '';
-        $pagetpl->initialtoggleclass = ($this->config->initialexpanded ?? 1) ? '' : 'collapsed';
+        $pagetpl->initialtoggleclass = ($this->config->initialexpanded ?? 1) ? '' : 'collapsed ';
         $initialicon = ($this->config->initialexpanded ?? 1) ? 'minus' : 'plus';
         $pagetpl->initialicon = $OUTPUT->pix_icon('t/switch_'.$initialicon, '', 'moodle');
 
@@ -401,10 +405,10 @@ class block_page_tracker extends block_base {
 
         if (empty($this->config->hideaccessbullets)) {
             if ($page->accessed) {
-                $pagetpl->hasbeenseenclass = 'has-been-seen';
+                $pagetpl->hasbeenseenclass = 'has-been-seen ';
                 if ($page->complete) {
                     $pagetpl->markurl = self::$ticks->image;
-                    $pagetpl->hasbeenseenclass = 'has-been-seen full';
+                    $pagetpl->hasbeenseenclass = 'has-been-seen full ';
                 } else {
                     $pagetpl->markurl = self::$ticks->imagepartial;
                 }
@@ -422,8 +426,9 @@ class block_page_tracker extends block_base {
             $pagetpl->pagename = format_string($page->nameone);
         }
 
-        $pagetpl->level = 0 + @$page->get_page_depth();
-        $pagetpl->pageurl = new moodle_url('/course/view.php', ['id' => $COURSE->id, 'page' => $page->id]);
+        // page url must use course_page::url_build as it resolves CM override.
+        $pagetpl->level = $page->get_page_depth() ?? 0;
+        $pagetpl->pageurl = $page->url_build('page', $page->id);
         $pagetpl->islink = $this->is_link($page);
 
         $parentid = $page->get_parent(true);
